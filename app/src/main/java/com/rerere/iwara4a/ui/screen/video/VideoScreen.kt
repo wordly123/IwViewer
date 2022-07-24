@@ -289,17 +289,6 @@ fun LargeScreenVideoPlayer(
                             Text(text = stringResource(R.string.introduction))
                         }
                     )
-                    Tab(
-                        selected = pagerState.currentPage == 1,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(1)
-                            }
-                        },
-                        text = {
-                            Text(text = stringResource(R.string.similar_video))
-                        }
-                    )
                 }
                 HorizontalPager(
                     modifier = Modifier
@@ -379,17 +368,6 @@ private fun CompatVideoPlayer(
                         },
                         text = {
                             Text(text = stringResource(R.string.comment))
-                        }
-                    )
-                    Tab(
-                        selected = pagerState.currentPage == 2,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(2)
-                            }
-                        },
-                        text = {
-                            Text(text = stringResource(R.string.similar_video))
                         }
                     )
                 }

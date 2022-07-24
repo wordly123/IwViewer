@@ -31,7 +31,6 @@
     <string name="video">動画</string>
     <string name="image">画像</string>
     <string name="comment">コメント</string>
-    <string name="similar_video">おすすめ</string>
     <string name="search">検索</string>
     <string name="screen_friends_list_status_pending_request">承認待ち</string>
     <string name="screen_friends_list_status_pending">あなたへのリクエスト</string>
