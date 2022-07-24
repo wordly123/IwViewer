@@ -145,7 +145,6 @@
     <string name="screen_video_description_like_status_liked">Liked</string>
     <string name="screen_video_description_like_status_no_like">Like</string>
     <string name="screen_video_description_playlist">Playlist</string>
-    <string name="screen_video_description_share">Share</string>
     <string name="screen_video_description_download_button_inapp">In-app download</string>
     <string name="screen_video_description_download_button_inapp_add_queue">Added to download queue</string>
     <string name="screen_video_description_download_fail_resolve">The video address could not be resolved, the author may have deleted the video.</string>

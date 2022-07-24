@@ -6,7 +6,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ExpandLess
@@ -23,18 +22,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEach
 import coil.compose.AsyncImage
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.detail.video.VideoDetail
-import com.rerere.iwara4a.data.model.index.MediaPreview
 import com.rerere.iwara4a.data.model.index.MediaType
-import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.component.md.ButtonStyle
 import com.rerere.iwara4a.ui.component.md.ButtonX
@@ -46,7 +38,6 @@ import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.setClipboard
 import com.rerere.iwara4a.util.shareMedia
 import com.rerere.iwara4a.util.stringResource
-import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
 fun VideoScreenDetailTab(
@@ -68,9 +59,6 @@ fun VideoScreenDetailTab(
 
 @Composable
 private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel) {
-    var expand by rememberSaveable {
-        mutableStateOf(false)
-    }
     Card(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -85,15 +73,15 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                     modifier = Modifier.weight(1f),
                     text = videoDetail.title,
                     style = MaterialTheme.typography.headlineSmall,
-                    maxLines = if (expand) 3 else 1
+                    maxLines = 3
                 )
                 // 更多
-                IconButton(onClick = { expand = !expand }) {
-                    Icon(
-                        if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-                        null
-                    )
-                }
+//                IconButton(onClick = { expand = !expand }) {
+//                    Icon(
+//                        if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+//                        null
+//                    )
+//                }
             }
 
             // 视频信息
@@ -125,24 +113,21 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+            // 操作
+            Actions(videoDetail, videoViewModel)
 
             // 介绍
-            AnimatedVisibility(expand) {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    SelectionContainer {
-                        SmartLinkText(
-                            text = videoDetail.description,
-                            maxLines = if (expand) Int.MAX_VALUE else 5,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
+            Box(
+                modifier = Modifier.fillMaxWidth().fillMaxSize()
+            ) {
+                SelectionContainer {
+                    SmartLinkText(
+                        text = videoDetail.description,
+                        maxLines =  Int.MAX_VALUE,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
-
-            // 操作
-            Actions(videoDetail, videoViewModel, expand)
         }
     }
 }
@@ -150,8 +135,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
 @Composable
 private fun ColumnScope.Actions(
     videoDetail: VideoDetail,
-    videoViewModel: VideoViewModel,
-    expand: Boolean
+    videoViewModel: VideoViewModel
 ) {
     val context = LocalContext.current
     val navController = LocalNavController.current
@@ -279,80 +263,53 @@ private fun ColumnScope.Actions(
         }
     }
     // 展开操作
-    AnimatedVisibility(expand) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            modifier = Modifier.fillMaxWidth()
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        IconButton(onClick = {
+            videoViewModel.translate()
+        }) {
+            Icon(Icons.Outlined.Translate, null)
+        }
+        OutlinedButton(
+            onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
         ) {
-            IconButton(onClick = {
-                videoViewModel.translate()
-            }) {
-                Icon(Icons.Outlined.Translate, null)
-            }
-            OutlinedButton(
-                onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
-            ) {
-                Text(text = stringResource(id = R.string.screen_video_description_playlist))
-            }
-            OutlinedButton(
-                onClick = { context.shareMedia(MediaType.VIDEO, videoDetail.id) }
-            ) {
-                Text(text = stringResource(id = R.string.screen_video_description_share))
-            }
-            val downloadDialog = rememberMaterialDialogState()
-            val exist by produceState(initialValue = false) {
-                value = videoViewModel.database.getDownloadedVideoDao()
-                    .getVideo(videoDetail.nid) != null
-            }
-            val videoLinks by videoViewModel.videoLink.collectAsState()
-            if (downloadDialog.isVisible()) {
-                AlertDialog(
-                    onDismissRequest = { downloadDialog.hide() },
-                    title = {
-                        Text(stringResource(id = R.string.screen_video_description_download_button_title))
-                    },
-                    text = {
-                        Text(stringResource(id = R.string.screen_video_description_download_button_message))
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            if (!exist) {
-                                val first = videoLinks.readSafely()?.firstOrNull()
-                                first?.let {
-                                    context.downloadVideo(
-                                        url = first.toLink(),
-                                        videoDetail = videoDetail
-                                    )
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue),
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
-                                    downloadDialog.hide()
-                                } ?: kotlin.run {
-                                    Toast.makeText(
-                                        context,
-                                        context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_video_description_download_complete),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }) {
-                            Text(stringResource(id = R.string.screen_video_description_download_button_inapp))
-                        }
-                        TextButton(onClick = {
+            Text(text = stringResource(id = R.string.screen_video_description_playlist))
+        }
+        val downloadDialog = rememberMaterialDialogState()
+        val exist by produceState(initialValue = false) {
+            value = videoViewModel.database.getDownloadedVideoDao()
+                .getVideo(videoDetail.nid) != null
+        }
+        val videoLinks by videoViewModel.videoLink.collectAsState()
+        if (downloadDialog.isVisible()) {
+            AlertDialog(
+                onDismissRequest = { downloadDialog.hide() },
+                title = {
+                    Text(stringResource(id = R.string.screen_video_description_download_button_title))
+                },
+                text = {
+                    Text(stringResource(id = R.string.screen_video_description_download_button_message))
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        if (!exist) {
                             val first = videoLinks.readSafely()?.firstOrNull()
                             first?.let {
-                                context.setClipboard(first.toLink())
+                                context.downloadVideo(
+                                    url = first.toLink(),
+                                    videoDetail = videoDetail
+                                )
+                                Toast
+                                    .makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                                downloadDialog.hide()
                             } ?: kotlin.run {
                                 Toast.makeText(
                                     context,
@@ -360,18 +317,38 @@ private fun ColumnScope.Actions(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                            downloadDialog.hide()
-                        }) {
-                            Text(context.stringResource(id = R.string.screen_video_description_download_button_copy_link))
+                        } else {
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_video_description_download_complete),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+                    }) {
+                        Text(stringResource(id = R.string.screen_video_description_download_button_inapp))
                     }
-                )
-            }
-            OutlinedButton(
-                onClick = { downloadDialog.show() }
-            ) {
-                Text(text = stringResource(id = R.string.screen_video_description_download_button_label))
-            }
+                    TextButton(onClick = {
+                        val first = videoLinks.readSafely()?.firstOrNull()
+                        first?.let {
+                            context.setClipboard(first.toLink())
+                        } ?: kotlin.run {
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        downloadDialog.hide()
+                    }) {
+                        Text(context.stringResource(id = R.string.screen_video_description_download_button_copy_link))
+                    }
+                }
+            )
+        }
+        OutlinedButton(
+            onClick = { downloadDialog.show() }
+        ) {
+            Text(text = stringResource(id = R.string.screen_video_description_download_button_label))
         }
     }
 }
