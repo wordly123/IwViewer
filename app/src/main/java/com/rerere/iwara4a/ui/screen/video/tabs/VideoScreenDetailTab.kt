@@ -63,44 +63,6 @@ fun VideoScreenDetailTab(
             // 视频简介
             VideoDetail(videoDetail, videoViewModel)
         }
-
-        item {
-            // 作者更多视频
-            MaterialFadeThrough(videoDetail) { detail ->
-                when {
-                    // Loaded
-                    detail.moreVideo.isNotEmpty() -> AuthorMoreVideo(videoDetail)
-                    // Shimmer Effect
-                    detail.likeLink.isEmpty() -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            repeat(3) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                                ) {
-                                    repeat(2) {
-                                        Box(
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(8.dp))
-                                                .weight(1f)
-                                                .aspectRatio(16 / 9f)
-                                                .placeholder(
-                                                    visible = true,
-                                                    highlight = PlaceholderHighlight.shimmer()
-                                                )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -409,39 +371,6 @@ private fun ColumnScope.Actions(
                 onClick = { downloadDialog.show() }
             ) {
                 Text(text = stringResource(id = R.string.screen_video_description_download_button_label))
-            }
-        }
-    }
-}
-
-@Composable
-private fun AuthorMoreVideo(videoDetail: VideoDetail) {
-    val navController = LocalNavController.current
-    Column {
-        // 更多视频
-        Text(
-            text = "${stringResource(id = R.string.screen_video_other_uploads)}:",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-        )
-
-        videoDetail.moreVideo.chunked(2).fastForEach {
-            Row {
-                it.fastForEach {
-                    Box(modifier = Modifier.weight(1f)) {
-                        MediaPreviewCard(
-                            navController, MediaPreview(
-                                title = it.title,
-                                author = "",
-                                previewPic = it.pic,
-                                likes = it.likes,
-                                watchs = it.watchs,
-                                type = MediaType.VIDEO,
-                                mediaId = it.id
-                            )
-                        )
-                    }
-                }
             }
         }
     }
