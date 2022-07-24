@@ -12,9 +12,6 @@
 使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本作者无关**，app仅仅承担浏览器的功能   
 使用请遵守你所在地区法律，请勿公开传播该APP
 
-## ⬇ 下载
-https://github.com/jiangdashao/iwara4a/releases/latest
-
 ## 截图
 (截图可能已经过时，仅供参考!)
 | 主页 | 播放页 | 搜索 |
