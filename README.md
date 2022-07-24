@@ -1,22 +1,10 @@
 ![Logo](/app/src/main/res/mipmap-xxhdpi/ducky.png)
-# Iwara4A
-[![GitHub issues](https://img.shields.io/github/issues/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/issues)
-[![GitHub forks](https://img.shields.io/github/forks/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/network)
-[![GitHub stars](https://img.shields.io/github/stars/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
-[![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
-![GitHub all releases](https://img.shields.io/github/downloads/jiangdashao/iwara4a/total)
-
-[[English Document Here!]](/art/doc/README_EN.md)
+# IwViewer
 
 基于Jetpack Compose开发的 [iwara](https://iwara.tv) 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 完全无多余权限请求
 使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本作者无关**，app仅仅承担浏览器的功能   
 使用请遵守你所在地区法律，请勿公开传播该APP
 
-## 截图
-(截图可能已经过时，仅供参考!)
-| 主页 | 播放页 | 搜索 |
-| ----- | ------| ------|
-| <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400"> | <img src="art/search.png" align="left" height="400">
 
 ## 🚩 特性
 * Material You设计
