@@ -302,24 +302,6 @@ private fun TopBar(
             }
         },
         actions = {
-            IconButton(
-                onClick = {
-                    navController.navigate("message")
-                }
-            ) {
-                BadgedBox(
-                    badge = {
-                        androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
-                            Badge {
-                                Text(text = indexViewModel.self.messages.toString())
-                            }
-                        }
-                    }
-                ) {
-                    Icon(Icons.Outlined.Message, null)
-                }
-            }
-
             IconButton(onClick = { navController.navigate("search") }) {
                 Icon(Icons.Outlined.Search, null)
             }

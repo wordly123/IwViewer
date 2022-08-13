@@ -41,7 +41,6 @@ import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
 import com.rerere.iwara4a.ui.screen.log.LogScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
-import com.rerere.iwara4a.ui.screen.message.MessageScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
 import com.rerere.iwara4a.ui.screen.self.SelfScreen
@@ -258,9 +257,6 @@ class RouterActivity : AppCompatActivity() {
                             FriendsScreen()
                         }
 
-                        composable("message") {
-                            MessageScreen()
-                        }
 
                         composable("following") {
                             FollowScreen()
