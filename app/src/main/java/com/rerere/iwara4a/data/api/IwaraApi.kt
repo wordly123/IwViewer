@@ -72,7 +72,7 @@ interface IwaraApi {
     suspend fun getVideoPageDetail(session: Session, videoId: String): Response<VideoDetail>
 
     /**
-     * 喜欢某个视频/图片
+     * 收藏某个视频/图片
      *
      */
     suspend fun like(session: Session, like: Boolean, likeLink: String): Response<LikeResponse>
@@ -173,11 +173,11 @@ interface IwaraApi {
     ): Response<MediaList>
 
     /**
-     * 获取喜欢的视频列表
+     * 获取收藏的视频列表
      *
      * @param session 登录凭据
      * @param page 页数
-     * @return 喜欢的视频列表
+     * @return 收藏的视频列表
      */
     suspend fun getLikePage(session: Session, @IntRange(from = 0) page: Int): Response<MediaList>
 

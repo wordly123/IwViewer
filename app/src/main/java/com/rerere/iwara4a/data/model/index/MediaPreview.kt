@@ -10,7 +10,7 @@ data class MediaPreview(
     val author: String,
     // 封面
     val previewPic: String,
-    // 喜欢数
+    // 收藏数
     val likes: String,
     // 播放量
     val watchs: String,

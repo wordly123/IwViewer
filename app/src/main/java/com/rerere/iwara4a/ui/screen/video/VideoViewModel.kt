@@ -176,7 +176,7 @@ class VideoViewModel @Inject constructor(
         }
     }
 
-    fun handleLike(result: (action: Boolean, success: Boolean) -> Unit) {
+    fun handleLike() {
         val action = !videoDetailState.value.read().isLike
         viewModelScope.launch {
             val response = mediaRepo.like(
@@ -190,11 +190,10 @@ class VideoViewModel @Inject constructor(
                         .copy(isLike = response.read().flagStatus == "flagged")
                 )
             }
-            result(action, response.isSuccess())
         }
     }
 
-    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit) {
+    fun handleFollow() {
         val action = !videoDetailState.value.read().follow
         viewModelScope.launch {
             val response = mediaRepo.follow(
@@ -208,7 +207,6 @@ class VideoViewModel @Inject constructor(
                         .copy(follow = response.read().flagStatus == "flagged")
                 )
             }
-            result(action, response.isSuccess())
         }
     }
 }

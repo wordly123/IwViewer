@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Translate
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -75,13 +72,6 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                     style = MaterialTheme.typography.headlineSmall,
                     maxLines = 3
                 )
-                // 更多
-//                IconButton(onClick = { expand = !expand }) {
-//                    Icon(
-//                        if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-//                        null
-//                    )
-//                }
             }
 
             // 视频信息
@@ -175,99 +165,49 @@ private fun ColumnScope.Actions(
         Row(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             authorComp()
-        }
-
-        // 关注
-        ButtonX(
-            style = if (videoDetail.follow) ButtonStyle.Outlined else ButtonStyle.Filled,
-            onClick = {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-
-                videoViewModel.handleFollow { action, success ->
-                    if (action) {
-                        Toast
-                            .makeText(
-                                context,
-                                if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
-                                    id = R.string.follow_fail
-                                ),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    } else {
-                        Toast
-                            .makeText(
-                                context,
-                                if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
-                                    id = R.string.unfollow_fail
-                                ),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
+            // 关注
+            Spacer(Modifier.weight(1f))
+            ButtonX(
+                style = if (videoDetail.follow) ButtonStyle.Outlined else ButtonStyle.Filled,
+                onClick = {
+                    //触摸震动反馈
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    videoViewModel.handleFollow()
                 }
+
+            ) {
+                Icon(Icons.Outlined.Add, null)
+                Text(
+                    text = if (videoDetail.follow) stringResource(id = R.string.follow_status_following)
+                    else stringResource(id = R.string.follow_status_not_following)
+                )
             }
-        ) {
-            Text(
-                text = if (videoDetail.follow) stringResource(id = R.string.follow_status_following) else "+ ${
-                    stringResource(
-                        id = R.string.follow_status_not_following
-                    )
-                }"
-            )
-        }
-        // 喜欢视频
-        ButtonX(
-            style = if (videoDetail.isLike) ButtonStyle.Outlined else ButtonStyle.Filled,
-            onClick = {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-
-                videoViewModel.handleLike { action, success ->
-                    if (action) {
-                        Toast
-                            .makeText(
-                                context,
-                                if (success) "${context.stringResource(id = R.string.screen_video_description_liking_success)} ヾ(≧▽≦*)o" else context.stringResource(
-                                    id = R.string.screen_video_description_liking_fail
-                                ),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    } else {
-                        Toast
-                            .makeText(
-                                context,
-                                if (success) context.stringResource(id = R.string.screen_video_description_unlike_success) else context.stringResource(
-                                    id = R.string.screen_video_description_unlike_fail
-                                ),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
-                }
-            }
-        ) {
-            Icon(Icons.Outlined.Favorite, null)
-            Text(
-                text = if (videoDetail.isLike) {
-                    stringResource(id = R.string.screen_video_description_like_status_liked)
-                } else {
-                    stringResource(
-                        id = R.string.screen_video_description_like_status_no_like
-                    )
-                }
-            )
         }
     }
-    // 展开操作
+    // 操作
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         modifier = Modifier.fillMaxWidth()
     ) {
+        // 喜欢视频
+        ButtonX(
+            style = if (videoDetail.isLike) ButtonStyle.Outlined else ButtonStyle.Filled,
+            onClick = {
+                //触摸震动反馈
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                videoViewModel.handleLike()
+            }
+        ) {
+            Icon(Icons.Outlined.Favorite, null)
+            Text(
+                text = if (videoDetail.isLike) { stringResource(id = R.string.screen_video_description_like_status_liked)}
+                else { stringResource(id = R.string.screen_video_description_like_status_no_like )}
+            )
+        }
         OutlinedButton(
             onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
         ) {

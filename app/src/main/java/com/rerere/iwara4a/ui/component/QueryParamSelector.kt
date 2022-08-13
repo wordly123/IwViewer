@@ -83,7 +83,7 @@ fun Pair<String, String>.filterName() = when (this.first) {
 fun SortType.displayName() = when (this) {
     SortType.DATE -> "日期"
     SortType.VIEWS -> "播放量"
-    SortType.LIKES -> "喜欢"
+    SortType.LIKES -> "收藏"
 }
 
 @Composable

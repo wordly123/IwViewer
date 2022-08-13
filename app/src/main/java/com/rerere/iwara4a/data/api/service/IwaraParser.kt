@@ -465,7 +465,7 @@ class IwaraParser(
                     .first()
                     ?.attr("poster")
 
-                // 喜欢
+                // 收藏
                 val likeFlag = body.select("a[href~=^/flag/.+/like/.+\$]").first()
                 val isLike = likeFlag?.attr("href")?.startsWith("/flag/unflag/")
                 val likeLink = URLDecoder.decode(

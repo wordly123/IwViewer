@@ -31,7 +31,7 @@ data class VideoDetail(
     // 关注链接
     val followLink: String,
 
-    // 是否喜欢
+    // 是否收藏
     var isLike: Boolean,
     val likeLink: String
 ) {
