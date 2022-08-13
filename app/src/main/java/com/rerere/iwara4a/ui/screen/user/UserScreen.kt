@@ -429,9 +429,6 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                                 CommentItem(
                                     navController = navController,
                                     comment = it,
-                                    onRequestTranslate = {
-                                        userViewModel.translate(it)
-                                    }
                                 ) { comment ->
                                     dialog.open(
                                         replyTo = userViewModel.userData.username,

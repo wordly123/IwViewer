@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.data.api.google.TranslatorAPI
 import com.rerere.iwara4a.data.api.service.IwaraService
 import com.rerere.iwara4a.data.dao.AppDatabase
 import com.rerere.iwara4a.data.dao.insertSmart
@@ -36,7 +35,6 @@ class VideoViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
-    private val translatorAPI: TranslatorAPI,
     val database: AppDatabase,
     private val iwaraService: IwaraService
 ) : ViewModel() {
@@ -46,24 +44,6 @@ class VideoViewModel @Inject constructor(
 
     init {
         loadVideo()
-    }
-
-    fun translate() {
-        viewModelScope.launch {
-            val title = async { translatorAPI.translate(videoDetailState.value.read().title) }
-            val description =
-                async { translatorAPI.translate(videoDetailState.value.read().description) }
-            videoDetailState.value = DataState.Success(
-                videoDetailState.value.read().copy(
-                    description = description.await() ?: "error",
-                    title = title.await() ?: "error"
-                )
-            )
-        }
-    }
-
-    suspend fun translate(text: String): String {
-        return translatorAPI.translate(text) ?: text
     }
 
     val commentPagerProvider = object : PageListProvider<Comment> {

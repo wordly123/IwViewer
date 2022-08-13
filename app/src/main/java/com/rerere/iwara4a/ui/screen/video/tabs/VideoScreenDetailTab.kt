@@ -268,11 +268,6 @@ private fun ColumnScope.Actions(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         modifier = Modifier.fillMaxWidth()
     ) {
-        IconButton(onClick = {
-            videoViewModel.translate()
-        }) {
-            Icon(Icons.Outlined.Translate, null)
-        }
         OutlinedButton(
             onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
         ) {

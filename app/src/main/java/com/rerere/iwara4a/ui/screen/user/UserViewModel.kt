@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.rerere.iwara4a.data.api.google.TranslatorAPI
 import com.rerere.iwara4a.data.api.paging.UserImageListSource
 import com.rerere.iwara4a.data.api.paging.UserVideoListSource
 import com.rerere.iwara4a.data.dao.AppDatabase
@@ -44,14 +43,11 @@ class UserViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo,
     private val mediaRepo: MediaRepo,
-    private val database: AppDatabase,
-    private val translatorAPI: TranslatorAPI
+    private val database: AppDatabase
 ) : ViewModel() {
     var loading by mutableStateOf(false)
     var error by mutableStateOf(false)
     var userData by mutableStateOf(UserData.LOADING)
-
-    suspend fun translate(text: String) = translatorAPI.translate(text) ?: text
 
     fun load(userId: String) {
         viewModelScope.launch {

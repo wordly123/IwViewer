@@ -68,9 +68,6 @@ fun VideoScreenCommentTab(videoViewModel: VideoViewModel) {
                         CommentItem(
                             navController = navController,
                             comment = it,
-                            onRequestTranslate = { text ->
-                                videoViewModel.translate(text)
-                            }
                         ) { comment ->
                             dialog.open(
                                 replyTo = comment.authorName,
