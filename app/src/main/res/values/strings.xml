@@ -165,7 +165,6 @@
     <string name="screen_video_comment_placeholder">Please have a polite comment!</string>
     <string name="screen_index_drawer_logout_title">Logout</string>
     <string name="screen_index_drawer_logout_message">Do you want to logout?</string>
-    <string name="screen_index_drawer_self_about_empty">This guy is lazy and has no signature</string>
     <string name="screen_index_drawer_update_profile">Update profile</string>
     <string name="screen_index_button_update_github">Go to Github to update</string>
     <string name="screen_index_button_update_neglect">Neglect</string>

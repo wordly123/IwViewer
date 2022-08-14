@@ -163,7 +163,6 @@
     <string name="screen_video_comment_placeholder">请文明用语哦！</string>
     <string name="screen_index_drawer_logout_title">注销登录</string>
     <string name="screen_index_drawer_logout_message">是否注销登录?</string>
-    <string name="screen_index_drawer_self_about_empty">这个人很懒，没有签名</string>
     <string name="screen_index_drawer_update_profile">刷新个人信息</string>
     <string name="screen_index_button_update_github">前往Github更新</string>
     <string name="screen_index_button_update_neglect">忽略</string>

@@ -111,33 +111,6 @@ fun IndexDrawer(
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    // Email
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (indexViewModel.self.about != null) {
-                            Text(
-                                modifier = Modifier.weight(1f),
-                                text = indexViewModel.self.about.let {
-                                    if (it!!.isNotBlank()) it else stringResource(
-                                        id = R.string.screen_index_drawer_self_about_empty
-                                    )
-                                }
-                            )
-                        } else {
-                            Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
-                        }
-                        IconButton(
-                            modifier = Modifier.size(25.dp),
-                            onClick = { indexViewModel.refreshSelf() }) {
-                            Icon(
-                                modifier = Modifier.size(25.dp),
-                                imageVector = Icons.Outlined.Refresh,
-                                contentDescription = stringResource(id = R.string.screen_index_drawer_update_profile)
-                            )
-                        }
-                    }
                 }
             }
         }

@@ -163,7 +163,6 @@
     <string name="screen_video_comment_placeholder">文明用語，謝謝！</string>
     <string name="screen_index_drawer_logout_title">登出</string>
     <string name="screen_index_drawer_logout_message">確定嗎？</string>
-    <string name="screen_index_drawer_self_about_empty">很懶，沒有寫介紹。</string>
     <string name="screen_index_drawer_update_profile">刷新信息</string>
     <string name="screen_index_button_update_github">立即升級（Github）</string>
     <string name="screen_index_button_update_neglect">忽略</string>

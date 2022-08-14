@@ -162,7 +162,6 @@
     <string name="screen_video_comment_placeholder">丁寧なコメントを心がけてください</string>
     <string name="screen_index_drawer_logout_title">ログアウト</string>
     <string name="screen_index_drawer_logout_message">ログアウトしますか？</string>
-    <string name="screen_index_drawer_self_about_empty">プロフィールがありません</string>
     <string name="screen_index_drawer_update_profile">プロフィールを更新</string>
     <string name="screen_index_button_update_github">Githubにアクセスして更新</string>
     <string name="screen_index_button_update_neglect">無視する</string>
