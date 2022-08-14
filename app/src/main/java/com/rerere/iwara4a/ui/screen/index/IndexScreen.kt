@@ -224,39 +224,6 @@ private fun TopBar(
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
     val context = LocalContext.current
-    var donationDialog by remember {
-        mutableStateOf(false)
-    }
-    if (donationDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                donationDialog = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        context.openUrl("https://afdian.net/@re_ovo")
-                    }
-                ) {
-                    Text(text = "我想捐助")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { donationDialog = false }) {
-                    Text(text = "不了")
-                }
-            },
-            title = {
-                Text(text = "考虑赞助一下作者吗?")
-            },
-            text = {
-                Text(text = "你的赞助可以给我更多动力来更新更多功能, 感谢你对app的支持")
-            },
-            icon = {
-                Icon(Icons.Outlined.Payment, null)
-            }
-        )
-    }
     val self = LocalSelfData.current
     LaunchedEffect(Unit) {
         delay(100)
@@ -269,7 +236,6 @@ private fun TopBar(
             && (self.numId <= 190_0000 || !self.profilePic.contains("default-avatar.png"))
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
         ) {
-            donationDialog = true
             setting.edit {
                 putLong("lastPopup", System.currentTimeMillis())
             }
