@@ -33,6 +33,8 @@ interface PageListProvider<T> {
 
     fun getPage(): Flow<DataState<List<T>>>
 
+    fun getTotal(): Int
+
     fun refresh() {}
 
     fun hasNext(): Boolean {

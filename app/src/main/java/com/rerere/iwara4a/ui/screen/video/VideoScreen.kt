@@ -340,6 +340,7 @@ private fun CompatVideoPlayer(
         if (!fullScreen) {
             val pagerState = rememberPagerState(0)
             val coroutineScope = rememberCoroutineScope()
+            val total = videoViewModel.commentPagerProvider.getTotal()
             Column {
                 TabRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -367,7 +368,7 @@ private fun CompatVideoPlayer(
                             }
                         },
                         text = {
-                            Text(text = stringResource(R.string.comment))
+                            Text(text = stringResource(R.string.comment) + " " + total)
                         }
                     )
                 }

@@ -61,5 +61,8 @@ class SearchViewModel @Inject constructor(
         }
 
         override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+        override fun getTotal(): Int {
+            TODO("Not yet implemented")
+        }
     }
 }

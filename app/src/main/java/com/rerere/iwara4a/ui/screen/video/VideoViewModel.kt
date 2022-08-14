@@ -48,6 +48,7 @@ class VideoViewModel @Inject constructor(
 
     val commentPagerProvider = object : PageListProvider<Comment> {
         private var lastLoadingPage = -1
+        private var total = 0
         private val data = MutableStateFlow<DataState<List<Comment>>>(DataState.Empty)
         private var hasNext by mutableStateOf(true)
 
@@ -86,6 +87,7 @@ class VideoViewModel @Inject constructor(
                     data.value = DataState.Success(
                         response.comments
                     )
+                    total = response.total
                     hasNext = response.hasNext
                     lastLoadingPage = page
                 } catch (e: Exception) {
@@ -101,6 +103,10 @@ class VideoViewModel @Inject constructor(
 
         override fun hasNext(): Boolean {
             return hasNext
+        }
+
+        override fun getTotal(): Int {
+            return total
         }
     }
 

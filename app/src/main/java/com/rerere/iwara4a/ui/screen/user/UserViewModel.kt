@@ -179,6 +179,10 @@ class UserViewModel @Inject constructor(
         override fun hasNext(): Boolean {
             return hasNext
         }
+
+        override fun getTotal(): Int {
+            TODO("Not yet implemented")
+        }
     }
 
     val videoPager = Pager(

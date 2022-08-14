@@ -132,6 +132,9 @@ class IndexViewModel @Inject constructor(
         }
 
         override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+        override fun getTotal(): Int {
+            TODO("Not yet implemented")
+        }
     }
 
 
@@ -163,6 +166,9 @@ class IndexViewModel @Inject constructor(
         }
 
         override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+        override fun getTotal(): Int {
+            TODO("Not yet implemented")
+        }
     }
 
     // 图片列表
@@ -198,6 +204,9 @@ class IndexViewModel @Inject constructor(
         }
 
         override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+        override fun getTotal(): Int {
+            TODO("Not yet implemented")
+        }
     }
 
     // 推荐
