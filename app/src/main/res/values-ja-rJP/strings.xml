@@ -20,8 +20,6 @@
     <string name="screen_index_drawer_item_likes">スキ！</string>
     <string name="screen_index_drawer_item_playlist">プレイリスト</string>
     <string name="screen_index_drawer_item_setting">設定</string>
-    <string name="screen_index_drawer_item_donate">寄付</string>
-    <string name="screen_index_drawer_item_forum">フォーラム</string>
     <string name="screen_index_drawer_item_chat">チャット</string>
     <string name="screen_index_drawer_item_friends">フレンド</string>
     <string name="oreno3d_latest">新着</string>

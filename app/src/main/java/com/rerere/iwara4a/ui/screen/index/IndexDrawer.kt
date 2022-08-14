@@ -241,24 +241,6 @@ fun IndexDrawer(
                 selected = false
             )
 
-            // 论坛
-            NavigationDrawerItem(
-                onClick = {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("forum")
-                    }
-                },
-                icon = {
-                    Icon(Icons.Outlined.Forum, null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_forum))
-                },
-                badge = {},
-                selected = false
-            )
-
             // 设置
             NavigationDrawerItem(
                 onClick =  {
@@ -272,57 +254,6 @@ fun IndexDrawer(
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_setting))
-                },
-                badge = {},
-                selected = false
-            )
-
-            // 交流群
-            var showDialog by remember { mutableStateOf(false) }
-            if(showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = {
-                        Text("交流群 | Chat Group")
-                    },
-                    text = {
-                        Text("请选择加入交流群的类型:")
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            showDialog = false
-                            coroutineScope.launch {
-                                drawerState.close()
-                                context.openUrl("https://t.me/iwara4a")
-                            }
-                        }) {
-                            Text("Telegram")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                coroutineScope.launch {
-                                    drawerState.close()
-                                    context.openUrl("https://discord.gg/ceqzvbF2u9")
-                                }
-                            }
-                        ){
-                            Text("Discord")
-                        }
-                    }
-                )
-            }
-            NavigationDrawerItem(
-                onClick =  {
-                    showDialog = true
-                },
-                icon = {
-                    Icon(Icons.Outlined.Send, null)
-                },
-                label = {
-                    Text(text = "群组")
                 },
                 badge = {},
                 selected = false
