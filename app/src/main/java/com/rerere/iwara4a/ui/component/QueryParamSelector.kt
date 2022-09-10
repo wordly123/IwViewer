@@ -46,20 +46,16 @@ data class MediaFilter(
 }
 
 val MEDIA_FILTERS = listOf(
-    MediaFilter("type", "video", "image"),
     MediaFilter(
         "created",
-        "2022-01",
-        "2022-02",
-        "2022-03",
-        "2022-04",
         "2022",
         "2021",
         "2020",
         "2019",
-        "2018"
+        "2018",
+        "2017"
     ),
-    MediaFilter("field_categories", "6", "16190", "31264")
+    MediaFilter("field_categories","1","6","7","8","33","34","16104","16105","16190","31263","31264","31265")
 )
 
 @Composable
@@ -71,9 +67,18 @@ fun Pair<String, String>.filterName() = when (this.first) {
     }
     "created" -> "上传日期: ${this.second}"
     "field_categories" -> "类型: " + when (this.second) {
+        "1" -> "舰娘"
         "6" -> "Vocaloid"
+        "7" -> "东方"
+        "8" -> "MMD杂志"
+        "33" -> "偶像大师"
+        "34" -> "原创角色"
+        "16104" -> "甜心选择"
+        "16105" -> "Source FilmMaker"
         "16190" -> "虚拟主播"
+        "31263" -> "碧蓝航线"
         "31264" -> "原神"
+        "31265" -> "Hololive"
         else -> "(${this.second})"
     }
     else -> "${this.first}: ${this.second}"
