@@ -1,12 +1,10 @@
 package com.rerere.iwara4a.ui.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material.icons.outlined.MenuOpen
+import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -86,9 +84,9 @@ fun Pair<String, String>.filterName() = when (this.first) {
 
 @Composable
 fun SortType.displayName() = when (this) {
-    SortType.DATE -> "日期"
-    SortType.VIEWS -> "播放量"
-    SortType.LIKES -> "收藏"
+    SortType.DATE -> "最新日期"
+    SortType.VIEWS -> "最多播放量"
+    SortType.LIKES -> "最多收藏"
 }
 
 @Composable
@@ -104,9 +102,6 @@ fun QueryParamSelector(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = {
-                Text("排序和过滤")
-            },
             text = {
                 Column {
                     var expand by remember {
@@ -116,10 +111,11 @@ fun QueryParamSelector(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(modifier = Modifier.weight(0.4f), text = "排序条件")
+                        Text(modifier = Modifier.weight(0.4f), text = "排序")
+                        Spacer(Modifier.weight(1f))
                         Row(
                             modifier = Modifier
-                                .weight(0.6f)
+                                .weight(1.2f)
                                 .clickable {
                                     expand = !expand
                                 },
@@ -127,7 +123,7 @@ fun QueryParamSelector(
                         ) {
                             Text(
                                 text = queryParam.sortType.displayName(),
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1.2f)
                             )
                             Icon(Icons.Outlined.ArrowDropDown, null)
                             DropdownMenu(
@@ -154,9 +150,8 @@ fun QueryParamSelector(
                             }
                         }
                     }
-
+                    Spacer(Modifier.height(15.dp))
                     Column {
-                        Text(text = "过滤条件")
                         MEDIA_FILTERS.fastForEach { filter ->
                             FlowRow(
                                 modifier = Modifier.fillMaxWidth(),
@@ -199,6 +194,6 @@ fun QueryParamSelector(
     }
 
     IconButton(onClick = { showDialog = true }) {
-        Icon(Icons.Outlined.MenuOpen, null)
+        Icon(Icons.Outlined.FilterAlt, null)
     }
 }
