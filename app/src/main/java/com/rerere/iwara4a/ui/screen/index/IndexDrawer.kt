@@ -86,14 +86,6 @@ fun IndexDrawer(
                             .size(70.dp)
                             .clip(CircleShape)
                             .background(Color.LightGray)
-                            .combinedClickable(
-                                onLongClick = {
-                                    dialog = true
-                                },
-                                onClick = {
-                                    navController.navigate("self")
-                                }
-                            )
                     ) {
                         AsyncImage(
                             modifier = Modifier.fillMaxSize(),

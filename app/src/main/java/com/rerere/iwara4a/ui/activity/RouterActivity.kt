@@ -43,7 +43,6 @@ import com.rerere.iwara4a.ui.screen.log.LogScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
-import com.rerere.iwara4a.ui.screen.self.SelfScreen
 import com.rerere.iwara4a.ui.screen.setting.SettingScreen
 import com.rerere.iwara4a.ui.screen.test.TestScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
@@ -245,9 +244,6 @@ class RouterActivity : AppCompatActivity() {
                             LogScreen()
                         }
 
-                        composable("self") {
-                            SelfScreen()
-                        }
 
                         composable("forum") {
                             ForumScreen()

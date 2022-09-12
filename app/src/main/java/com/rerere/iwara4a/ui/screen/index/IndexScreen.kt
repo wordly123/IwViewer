@@ -66,7 +66,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     Column {
                         val update by indexViewModel.updateChecker.collectAsState()
                         var dismissUpdate by rememberSaveable {
-                            mutableStateOf(false)
+                            mutableStateOf(true)
                         }
                         val context = LocalContext.current
                         val currentVersion = LocalContext.current.getVersionName()
@@ -242,29 +242,10 @@ private fun TopBar(
         }
     }
     Md3TopBar(
-        title = {
-            Text(
-                text = if (indexViewModel.loadingSelf) {
-                    stringResource(R.string.app_name)
-                } else {
-                    indexViewModel.self.nickname
-                },
-                maxLines = 1
-            )
-        },
+        title = {},
         navigationIcon = {
-            IconButton(onClick = {
-                coroutineScope.launch {
-                    drawerState.open()
-                }
-            }) {
-                AsyncImage(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clip(CircleShape),
-                    model = indexViewModel.self.profilePic,
-                    contentDescription = null
-                )
+            IconButton(onClick = { coroutineScope.launch {drawerState.open()} }) {
+                Icon(Icons.Outlined.Menu, null)
             }
         },
         actions = {

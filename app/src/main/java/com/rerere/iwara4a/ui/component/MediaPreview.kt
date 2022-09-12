@@ -112,12 +112,6 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                     )
                     if (mediaPreview.author.isNotEmpty()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                modifier = Modifier.size(17.dp),
-                                painter = painterResource(R.drawable.upzhu),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(1.dp))
                             Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
                         }
                     }
