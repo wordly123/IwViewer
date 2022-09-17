@@ -208,11 +208,6 @@ private fun ColumnScope.Actions(
                 else { stringResource(id = R.string.screen_video_description_like_status_no_like )}
             )
         }
-        OutlinedButton(
-            onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
-        ) {
-            Text(text = stringResource(id = R.string.screen_video_description_playlist))
-        }
         val downloadDialog = rememberMaterialDialogState()
         val exist by produceState(initialValue = false) {
             value = videoViewModel.database.getDownloadedVideoDao()

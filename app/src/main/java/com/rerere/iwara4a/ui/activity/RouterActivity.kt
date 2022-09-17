@@ -40,7 +40,6 @@ import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
 import com.rerere.iwara4a.ui.screen.log.LogScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
-import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
 import com.rerere.iwara4a.ui.screen.setting.SettingScreen
 import com.rerere.iwara4a.ui.screen.test.TestScreen
@@ -180,40 +179,6 @@ class RouterActivity : AppCompatActivity() {
 
                         composable("about") {
                             AboutScreen()
-                        }
-
-
-                        dialog(
-                            route = "playlist?nid={nid}",
-                            arguments = listOf(
-                                navArgument("nid") {
-                                    defaultValue = 0
-                                    type = NavType.IntType
-                                }
-                            ),
-                            dialogProperties = DialogProperties(
-                                dismissOnBackPress = false,
-                                dismissOnClickOutside = false
-                            )
-                        ) {
-                            PlaylistDialog(
-                                navController,
-                                it.arguments!!.getInt("nid"),
-                                it.arguments!!.getString("playlist-id") ?: ""
-                            )
-                        }
-
-                        composable("playlist?playlist-id={playlist-id}", arguments = listOf(
-                            navArgument("playlist-id") {
-                                defaultValue = ""
-                                type = NavType.StringType
-                            }
-                        )) {
-                            PlaylistDialog(
-                                navController,
-                                it.arguments!!.getInt("nid"),
-                                it.arguments!!.getString("playlist-id") ?: ""
-                            )
                         }
 
                         composable("like") {

@@ -9,10 +9,6 @@ import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.data.model.index.MediaList
 import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.data.model.index.SubscriptionList
-import com.rerere.iwara4a.data.model.playlist.PlaylistAction
-import com.rerere.iwara4a.data.model.playlist.PlaylistDetail
-import com.rerere.iwara4a.data.model.playlist.PlaylistOverview
-import com.rerere.iwara4a.data.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.data.model.session.Session
 import com.rerere.iwara4a.ui.component.SortType
 import javax.inject.Inject
@@ -91,16 +87,6 @@ class MediaRepo @Inject constructor(
 
     suspend fun getLikePage(session: Session, page: Int) = iwaraApi.getLikePage(session, page)
 
-    suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview> =
-        iwaraApi.getPlaylistPreview(session, nid)
-
-    suspend fun modifyPlaylist(
-        session: Session,
-        nid: Int,
-        playlist: Int,
-        action: PlaylistAction
-    ): Response<Int> = iwaraApi.modifyPlaylist(session, nid, playlist, action)
-
     suspend fun getUserVideoList(
         session: Session,
         userIdOnVideo: String,
@@ -132,19 +118,4 @@ class MediaRepo @Inject constructor(
     ) {
         iwaraApi.postComment(session, nid, commentId, content, commentPostParam)
     }
-
-    suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>> =
-        iwaraApi.getPlaylistOverview(session)
-
-    suspend fun getPlaylistDetail(session: Session, playlistId: String): Response<PlaylistDetail> =
-        iwaraApi.getPlaylistDetail(session, playlistId)
-
-    suspend fun createPlaylist(session: Session, title: String) =
-        iwaraApi.createPlaylist(session, title)
-
-    suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean> =
-        iwaraApi.deletePlaylist(session, id)
-
-    suspend fun changePlaylistName(session: Session, id: Int, name: String): Response<Boolean> =
-        iwaraApi.changePlaylistName(session, id, name)
 }

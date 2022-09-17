@@ -19,7 +19,6 @@
     <string name="screen_index_drawer_item_history">History</string>
     <string name="screen_index_drawer_item_downloads">Downloads</string>
     <string name="screen_index_drawer_item_likes">Likes</string>
-    <string name="screen_index_drawer_item_playlist">Playlists</string>
     <string name="screen_index_drawer_item_setting">Setting</string>
     <string name="screen_index_drawer_item_tg" translatable="false">Telegram</string>
     <string name="screen_index_drawer_item_chat">Chat Room</string>
@@ -46,27 +45,9 @@
     <string name="screen_download_item_load_failed">Video files have been lost! Please try to download again!</string>
     <string name="screen_like_topbar_title">Like</string>
     <string name="load_error">Loading failed, click retry</string>
-    <string name="screen_playlist_dialog_topbar_title">Playlists</string>
-    <string name="screen_playlist_dialog_delete_success">Delete the playlist successfully!</string>
-    <string name="screen_playlist_dialog_delete_failed">Failed to delete playlist!</string>
-    <string name="screen_playlist_dialog_delete_title">Delete playlist</string>
-    <string name="screen_playlist_dialog_delete_message">Whether to delete the playlist:</string>
     <string name="save_button">Save</string>
-    <string name="screen_playlist_dialog_rename_success">Modify the playlist name successfully!</string>
-    <string name="screen_playlist_dialog_rename_failed">Failed to modify the playlist name!</string>
-    <string name="screen_playlist_dialog_rename_empty">The title can not be blank!</string>
-    <string name="screen_playlist_dialog_rename_title">Edit playlist name</string>
-    <string name="screen_playlist_create_creating">Creating playlist</string>
-    <string name="screen_playlist_create_create">Create playlist</string>
     <string name="success">Success</string>
     <string name="fail">Fail</string>
-    <string name="screen_playlist_create_title">Create playlist</string>
-    <string name="screen_playlist_create_label">Enter playlist name</string>
-    <string name="screen_playlist_detail_column">Playlist</string>
-    <string name="screen_playlist_explore_column">Playlists</string>
-    <string name="screen_playlist_explore_load_fail">Failed to load playlist</string>
-    <string name="screen_playlist_edit_add">Add to playlist</string>
-    <string name="screen_playlist_edit_load_fail">Failed to load! Please try again later!</string>
     <string name="screen_chat_topbar_title">Chatrrom</string>
     <string name="loading">Loading</string>
     <string name="screen_chat_reconnection">Reconnection</string>
@@ -128,7 +109,6 @@
     <string name="screen_video_description_unlike_fail">Unlaike failure</string>
     <string name="screen_video_description_like_status_liked">Liked</string>
     <string name="screen_video_description_like_status_no_like">Like</string>
-    <string name="screen_video_description_playlist">Playlist</string>
     <string name="screen_video_description_download_button_inapp">In-app download</string>
     <string name="screen_video_description_download_button_inapp_add_queue">Added to download queue</string>
     <string name="screen_video_description_download_fail_resolve">The video address could not be resolved, the author may have deleted the video.</string>

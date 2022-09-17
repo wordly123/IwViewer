@@ -186,24 +186,6 @@ fun IndexDrawer(
                 }
             )
 
-            // 播单
-            NavigationDrawerItem(
-                onClick = {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("playlist")
-                    }
-                },
-                icon = {
-                    Icon(Icons.Outlined.PlaylistPlay, null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_playlist))
-                },
-                badge = {},
-                selected = false
-            )
-
             // 设置
             NavigationDrawerItem(
                 onClick =  {

@@ -8,14 +8,9 @@ import com.rerere.iwara4a.data.model.detail.image.ImageDetail
 import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.data.model.flag.FollowResponse
 import com.rerere.iwara4a.data.model.flag.LikeResponse
-import com.rerere.iwara4a.data.model.friends.FriendList
 import com.rerere.iwara4a.data.model.index.MediaList
 import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.data.model.index.SubscriptionList
-import com.rerere.iwara4a.data.model.playlist.PlaylistAction
-import com.rerere.iwara4a.data.model.playlist.PlaylistDetail
-import com.rerere.iwara4a.data.model.playlist.PlaylistOverview
-import com.rerere.iwara4a.data.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.data.model.session.Session
 import com.rerere.iwara4a.data.model.user.Self
 import com.rerere.iwara4a.data.model.user.UserData
@@ -147,45 +142,6 @@ class IwaraApiImpl(
         )
     }
 
-    override suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview> {
-        return try {
-            Response.success(iwaraService.getPlaylistPreview(session.toString(), nid))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Response.failed(e.javaClass.simpleName)
-        }
-    }
-
-    override suspend fun modifyPlaylist(
-        session: Session,
-        nid: Int,
-        playlist: Int,
-        action: PlaylistAction
-    ): Response<Int> {
-        return try {
-            val result = when (action) {
-                PlaylistAction.PUT -> {
-                    iwaraService.putToPlaylist(
-                        cookie = session.toString(),
-                        nid = nid,
-                        playlist = playlist
-                    )
-                }
-                PlaylistAction.DELETE -> {
-                    iwaraService.deleteFromPlaylist(
-                        cookie = session.toString(),
-                        nid = nid,
-                        playlist = playlist
-                    )
-                }
-            }
-            Response.success(result.status)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Response.failed(e.javaClass.simpleName)
-        }
-    }
-
     override suspend fun postComment(
         session: Session,
         nid: Int,
@@ -194,44 +150,5 @@ class IwaraApiImpl(
         commentPostParam: CommentPostParam
     ) {
         iwaraParser.postComment(session, nid, commentId, content, commentPostParam)
-    }
-
-    override suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>> {
-        return iwaraParser.getPlaylistOverview(session)
-    }
-
-    override suspend fun getPlaylistDetail(
-        session: Session,
-        playlistId: String
-    ): Response<PlaylistDetail> {
-        return iwaraParser.getPlaylistDetail(
-            session,
-            playlistId
-        )
-    }
-
-    override suspend fun createPlaylist(session: Session, name: String): Response<Boolean> {
-        return try {
-            Response.success(iwaraService.createPlaylist(name).status == 1)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Response.failed(e.javaClass.name)
-        }
-    }
-
-    override suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean> {
-        return iwaraParser.deletePlaylist(session, id)
-    }
-
-    override suspend fun changePlaylistName(
-        session: Session,
-        id: Int,
-        name: String
-    ): Response<Boolean> {
-        return iwaraParser.changePlaylistName(session, id, name)
-    }
-
-    override suspend fun getFriendList(session: Session): Response<FriendList> {
-        return iwaraParser.getFriendList(session)
     }
 }

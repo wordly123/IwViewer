@@ -7,14 +7,9 @@ import com.rerere.iwara4a.data.model.detail.image.ImageDetail
 import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.data.model.flag.FollowResponse
 import com.rerere.iwara4a.data.model.flag.LikeResponse
-import com.rerere.iwara4a.data.model.friends.FriendList
 import com.rerere.iwara4a.data.model.index.MediaList
 import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.data.model.index.SubscriptionList
-import com.rerere.iwara4a.data.model.playlist.PlaylistAction
-import com.rerere.iwara4a.data.model.playlist.PlaylistDetail
-import com.rerere.iwara4a.data.model.playlist.PlaylistOverview
-import com.rerere.iwara4a.data.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.data.model.session.Session
 import com.rerere.iwara4a.data.model.user.Self
 import com.rerere.iwara4a.data.model.user.UserData
@@ -182,30 +177,6 @@ interface IwaraApi {
     suspend fun getLikePage(session: Session, @IntRange(from = 0) page: Int): Response<MediaList>
 
     /**
-     * 根据NID加载Playlist
-     *
-     * @param session 登录凭据
-     * @param nid 视频NID
-     * @return playlist
-     */
-    suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview>
-
-    /**
-     * 编辑Playlist
-     *
-     * @param session 登录凭据
-     * @param nid 视频ID
-     * @param playlist 播单ID
-     * @return 状态码 (1 = 成功)
-     */
-    suspend fun modifyPlaylist(
-        session: Session,
-        nid: Int,
-        playlist: Int,
-        action: PlaylistAction
-    ): Response<Int>
-
-    /**
      * 提交评论
      *
      * @param session 登录凭据
@@ -217,34 +188,4 @@ interface IwaraApi {
         content: String,
         commentPostParam: CommentPostParam
     )
-
-    /**
-     * 获取播单列表概览
-     */
-    suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>>
-
-    /**
-     * 获取播单详细内容
-     */
-    suspend fun getPlaylistDetail(session: Session, playlistId: String): Response<PlaylistDetail>
-
-    /**
-     * 创建播单
-     */
-    suspend fun createPlaylist(session: Session, name: String): Response<Boolean>
-
-    /**
-     * 删除播单
-     */
-    suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean>
-
-    /**
-     * 修改播单名字
-     */
-    suspend fun changePlaylistName(session: Session, id: Int, name: String): Response<Boolean>
-
-    /**
-     * 获取好友列表
-     */
-    suspend fun getFriendList(session: Session) : Response<FriendList>
 }
