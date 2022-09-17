@@ -16,7 +16,7 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 100
+        versionCode 101
         versionName '1.40.0'
 
         javaCompileOptions {
