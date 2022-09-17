@@ -21,7 +21,6 @@
     <string name="screen_index_drawer_item_playlist">播单</string>
     <string name="screen_index_drawer_item_setting">设置</string>
     <string name="screen_index_drawer_item_chat">聊天</string>
-    <string name="screen_index_drawer_item_friends">好友</string>
     <string name="oreno3d_latest">最新</string>
     <string name="oreno3d_hot">火热</string>
     <string name="oreno3d_favorites">高评价</string>
@@ -31,17 +30,8 @@
     <string name="comment">评论</string>
     <string name="introduction">简介</string>
     <string name="search">搜索</string>
-    <string name="screen_friends_list_status_pending">等待同意</string>
-    <string name="screen_friends_list_status_pending_request">等待对方同意</string>
-    <string name="screen_friends_list_status_accepted">已同意</string>
-    <string name="screen_friends_list_status_else">未知</string>
     <string name="sure_button">确定</string>
     <string name="cancel_button">取消</string>
-    <string name="screen_friends_item_title">删除好友</string>
-    <string name="screen_friends_item_unknown_mistake">未知错误</string>
-    <string name="screen_friends_item_message">是否确定删除好友:</string>
-    <string name="screen_friends_list_empty">没有任何好友</string>
-    <string name="screen_friends_topbar_title">好友</string>
     <string name="screen_history_topbar_title">历史记录</string>
     <string name="screen_history_list_empty">暂无历史记录</string>
     <string name="screen_download_topbar_title">缓存</string>
@@ -117,10 +107,6 @@
     <string name="unfollow_fail">取消关注失败</string>
     <string name="follow_status_following">已关注</string>
     <string name="follow_status_not_following">关注</string>
-    <string name="screen_user_description_friend_unregister">请前往好友页面删除该好友</string>
-    <string name="screen_user_description_friend_state_add">加好友</string>
-    <string name="screen_user_description_friend_state_pending">好友待同意</string>
-    <string name="screen_user_description_friend_state_already">已是好友</string>
     <string name="screen_user_info_message">留言</string>
     <string name="screen_user_info_video">视频</string>
     <string name="screen_user_info_image">图片</string>

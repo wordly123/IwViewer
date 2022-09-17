@@ -21,7 +21,6 @@
     <string name="screen_index_drawer_item_playlist">プレイリスト</string>
     <string name="screen_index_drawer_item_setting">設定</string>
     <string name="screen_index_drawer_item_chat">チャット</string>
-    <string name="screen_index_drawer_item_friends">フレンド</string>
     <string name="oreno3d_latest">新着</string>
     <string name="oreno3d_hot">急上昇</string>
     <string name="oreno3d_favorites">高評価</string>
@@ -30,17 +29,8 @@
     <string name="image">画像</string>
     <string name="comment">コメント</string>
     <string name="search">検索</string>
-    <string name="screen_friends_list_status_pending_request">承認待ち</string>
-    <string name="screen_friends_list_status_pending">あなたへのリクエスト</string>
-    <string name="screen_friends_list_status_accepted">フレンド</string>
-    <string name="screen_friends_list_status_else">未知</string>
     <string name="sure_button">もちろん</string>
     <string name="cancel_button">キャンセル</string>
-    <string name="screen_friends_item_title">フレンドを削除</string>
-    <string name="screen_friends_item_message">フレンドを削除してもよろしいですか？:</string>
-    <string name="screen_friends_item_unknown_mistake">未知错误</string>
-    <string name="screen_friends_list_empty">フレンドがいません</string>
-    <string name="screen_friends_topbar_title">フレンド</string>
     <string name="screen_history_topbar_title">履歴記録</string>
     <string name="screen_history_list_empty">まだ履歴記録はありません</string>
     <string name="screen_download_topbar_title">ダウンロード</string>
@@ -116,10 +106,6 @@
     <string name="unfollow_fail">フォロー解除失敗</string>
     <string name="follow_status_following">フォロー中</string>
     <string name="follow_status_not_following">フォロー</string>
-    <string name="screen_user_description_friend_unregister">フレンドを解除するには、フレンドページにアクセスしてください</string>
-    <string name="screen_user_description_friend_state_add">フレンドに追加</string>
-    <string name="screen_user_description_friend_state_pending">承認待ち</string>
-    <string name="screen_user_description_friend_state_already">すでに友達です</string>
     <string name="screen_user_info_message">メッセージ</string>
     <string name="screen_user_info_video">動画</string>
     <string name="screen_user_info_image">画像</string>

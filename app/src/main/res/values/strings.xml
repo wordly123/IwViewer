@@ -23,7 +23,6 @@
     <string name="screen_index_drawer_item_setting">Setting</string>
     <string name="screen_index_drawer_item_tg" translatable="false">Telegram</string>
     <string name="screen_index_drawer_item_chat">Chat Room</string>
-    <string name="screen_index_drawer_item_friends">Friends</string>
     <string name="oreno3d_latest">Latest</string>
     <string name="oreno3d_hot">Hot</string>
     <string name="oreno3d_favorites">Favorite</string>
@@ -33,17 +32,8 @@
     <string name="comment">Comment</string>
     <string name="introduction">Introduction</string>
     <string name="search">Search</string>
-    <string name="screen_friends_list_status_pending">Pending</string>
-    <string name="screen_friends_list_status_pending_request">Pending Request</string>
-    <string name="screen_friends_list_status_accepted">Accepted</string>
-    <string name="screen_friends_list_status_else">Unknown</string>
     <string name="sure_button">Sure</string>
     <string name="cancel_button">Cancel</string>
-    <string name="screen_friends_item_title">Delete friend</string>
-    <string name="screen_friends_item_message">Are you sure you want to delete friends?:</string>
-    <string name="screen_friends_item_unknown_mistake">Unknown mistake</string>
-    <string name="screen_friends_list_empty">You don\'t have any friends</string>
-    <string name="screen_friends_topbar_title">Friends</string>
     <string name="screen_history_topbar_title">History record</string>
     <string name="screen_history_list_empty">No history record yet.</string>
     <string name="screen_download_topbar_title">Downloads</string>
@@ -119,10 +109,6 @@
     <string name="unfollow_fail">Unfollow failure</string>
     <string name="follow_status_following">Following</string>
     <string name="follow_status_not_following">Follow</string>
-    <string name="screen_user_description_friend_unregister">Please go to the friend page to delete the friend</string>
-    <string name="screen_user_description_friend_state_add">Add friend</string>
-    <string name="screen_user_description_friend_state_pending">Approval pending</string>
-    <string name="screen_user_description_friend_state_already">Already a friend</string>
     <string name="screen_user_info_message">Message</string>
     <string name="screen_user_info_video">Videos</string>
     <string name="screen_user_info_image">Images</string>

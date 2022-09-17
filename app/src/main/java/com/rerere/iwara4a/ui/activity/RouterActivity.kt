@@ -34,7 +34,6 @@ import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.follow.FollowScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
-import com.rerere.iwara4a.ui.screen.friends.FriendsScreen
 import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
@@ -247,10 +246,6 @@ class RouterActivity : AppCompatActivity() {
 
                         composable("forum") {
                             ForumScreen()
-                        }
-
-                        composable("friends") {
-                            FriendsScreen()
                         }
 
 

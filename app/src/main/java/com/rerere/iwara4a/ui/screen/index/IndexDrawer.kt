@@ -118,35 +118,6 @@ fun IndexDrawer(
             NavigationDrawerItem(
                 selected = false,
                 icon = {
-                    Icon(Icons.Outlined.People, null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_friends))
-                },
-                badge = {
-                    AnimatedVisibility(visible = indexViewModel.self.friendRequest > 0) {
-                        Box(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                .padding(vertical = 4.dp, horizontal = 6.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = indexViewModel.self.friendRequest.toString())
-                        }
-                    }
-                },
-                onClick = {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("friends")
-                    }
-                }
-            )
-
-            // 历史记录
-            NavigationDrawerItem(
-                selected = false,
-                icon = {
                     Icon(Icons.Outlined.History, null)
                 },
                 label = {

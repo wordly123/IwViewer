@@ -235,39 +235,6 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     }"
                 )
             }
-            // 好友
-            Button(
-                onClick = {
-                    when (userData.friend) {
-                        UserFriendState.NOT -> {
-                            userViewModel.handleFriendRequest {
-                                userViewModel.load(userId = userData.userId)
-                            }
-                        }
-                        UserFriendState.ALREADY -> {
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_user_description_friend_unregister),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                            navController.navigate("friends")
-                        }
-                        else -> {
-                        }
-                    }
-                }
-            ) {
-                Text(
-                    text = when (userData.friend) {
-                        UserFriendState.NOT -> stringResource(id = R.string.screen_user_description_friend_state_add)
-                        UserFriendState.PENDING -> stringResource(id = R.string.screen_user_description_friend_state_pending)
-                        UserFriendState.ALREADY -> stringResource(id = R.string.screen_user_description_friend_state_already)
-                    },
-                    maxLines = 1
-                )
-            }
         }
     }
 }

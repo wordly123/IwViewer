@@ -22,7 +22,6 @@
     <string name="screen_index_drawer_item_setting">設定</string>
 
     <string name="screen_index_drawer_item_chat">聊天</string>
-    <string name="screen_index_drawer_item_friends">好友</string>
     <string name="oreno3d_latest">最新</string>
     <string name="oreno3d_hot">火热</string>
     <string name="oreno3d_favorites">好評</string>
@@ -32,17 +31,8 @@
     <string name="comment">留言</string>
     <string name="introduction">説明</string>
     <string name="search">檢索</string>
-    <string name="screen_friends_list_status_pending">待同意</string>
-    <string name="screen_friends_list_status_pending_request">待對方同意</string>
-    <string name="screen_friends_list_status_accepted">已同意</string>
-    <string name="screen_friends_list_status_else">未知</string>
     <string name="sure_button">確認</string>
     <string name="cancel_button">取消</string>
-    <string name="screen_friends_item_title">刪除好友</string>
-    <string name="screen_friends_item_unknown_mistake">未知错误</string>
-    <string name="screen_friends_item_message">確定刪除好友？</string>
-    <string name="screen_friends_list_empty">沒有好友</string>
-    <string name="screen_friends_topbar_title">好友</string>
     <string name="screen_history_topbar_title">觀看記錄</string>
     <string name="screen_history_list_empty">最近未觀看影片</string>
     <string name="screen_download_topbar_title">下載</string>
@@ -118,10 +108,6 @@
     <string name="unfollow_fail">取消跟隨失敗</string>
     <string name="follow_status_following">已跟隨</string>
     <string name="follow_status_not_following">跟隨</string>
-    <string name="screen_user_description_friend_unregister">前往好友頁刪除好友</string>
-    <string name="screen_user_description_friend_state_add">添加好友</string>
-    <string name="screen_user_description_friend_state_pending">已發送好友請求</string>
-    <string name="screen_user_description_friend_state_already">已是好友</string>
     <string name="screen_user_info_message">留言</string>
     <string name="screen_user_info_video">影片</string>
     <string name="screen_user_info_image">圖片</string>
