@@ -11,8 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +21,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -37,6 +40,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarScrollState())
     val pagerState = rememberPagerState()
+    val state = PageListState
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -61,18 +65,24 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
             HorizontalPager(
                 count = 2,
                 state = pagerState,
-                userScrollEnabled = false
+                userScrollEnabled = true
             ) {
                 when (it) {
                     0 -> {
                         val pageList = rememberPageListPage()
                         Column {
-                            SearchBar(searchViewModel) {
-                                searchViewModel.provider.load(
-                                    pageList.page,
-                                    MediaQueryParam.Default
-                                )
-                            }
+                            SearchBar(searchViewModel,
+                                queryParam = pageList.queryParam,
+                                onChangeFiler = {
+                                    pageList.queryParam = MediaQueryParam(
+                                        pageList.queryParam.sortType,
+                                        it
+                                    )
+                                },
+                                onSearch = {
+                                    searchViewModel.provider.load(pageList.page, pageList.queryParam)
+                                }
+                            )
                             PageList(
                                 state = pageList,
                                 provider = searchViewModel.provider,
@@ -134,7 +144,11 @@ private fun TabComp(pagerState: PagerState) {
 }
 
 @Composable
-private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
+private fun SearchBar(searchViewModel: SearchViewModel,
+                      queryParam: MediaQueryParam,
+                      onChangeFiler: (MutableSet<String>) -> Unit,
+                      onSearch: () -> Unit
+){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     Card(modifier = Modifier.padding(8.dp)) {
@@ -199,6 +213,37 @@ private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
                 }
             }) {
                 Icon(Icons.Outlined.Search, null)
+            }
+        }
+    }
+    Column {
+        MEDIA_FILTERS.subList(1,2).fastForEach { filter ->
+            FlowRow(
+                modifier = Modifier.fillMaxWidth().padding(10.dp,0.dp),
+                mainAxisSpacing = 8.dp,
+                crossAxisSpacing = (-10).dp,
+                mainAxisAlignment =  FlowMainAxisAlignment.Start,
+                crossAxisAlignment = FlowCrossAxisAlignment.Start
+            ) {
+                filter.value.fastForEach { value ->
+                    val code = "${filter.type}:$value"
+                    FilterChip(
+                        selected = queryParam.filters.contains(code),
+                        onClick = {
+                            val filters = queryParam.filters.toMutableSet()
+                            if (!filters.contains(code)) {
+                                filters.add(code)
+                            } else {
+                                filters.remove(code)
+                            }
+                            onChangeFiler(filters)
+                            onSearch()
+                        },
+                        label = {
+                            Text(text = (filter.type to value).filterName())
+                        }
+                    )
+                }
             }
         }
     }

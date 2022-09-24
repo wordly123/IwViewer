@@ -33,9 +33,11 @@ class SearchViewModel @Inject constructor(
         private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
-            if(query.isBlank()) return
-            if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
-
+            if (queryParam != null) {
+                if(queryParam.filters.isEmpty()&&query.isBlank() ) return
+            }
+//            if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
+            if(page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
             viewModelScope.launch {
                 data.value = DataState.Loading
                 val response = mediaRepo.search(
