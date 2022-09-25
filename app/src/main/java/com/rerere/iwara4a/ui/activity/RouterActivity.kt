@@ -40,6 +40,7 @@ import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
 import com.rerere.iwara4a.ui.screen.log.LogScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
+import com.rerere.iwara4a.ui.screen.search.Oreno3dScreen
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
 import com.rerere.iwara4a.ui.screen.setting.SettingScreen
 import com.rerere.iwara4a.ui.screen.test.TestScreen
@@ -194,6 +195,10 @@ class RouterActivity : AppCompatActivity() {
                             )
                         ) {
                             DownloadScreen()
+                        }
+
+                        composable("oreno3d") {
+                            Oreno3dScreen()
                         }
 
                         composable("setting") {

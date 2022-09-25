@@ -76,7 +76,7 @@
     <string name="screen_setting_app_debug_subtitle">用於調試代碼</string>
     <string name="screen_image_topbar_title">查看圖片</string>
     <string name="screen_image_tab_text">圖片</string>
-    <string name="screen_search_bar_placeholder">檢索影片與圖片</string>
+    <string name="screen_search_bar_placeholder">檢索 Iwara</string>
     <string name="screen_search_bar_empty">輸入關鍵詞搜索</string>
     <string name="screen_self_topbar_title">編輯個人信息</string>
     <string name="screen_splash_animated_text">檢查登入狀態</string>

@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.search
 
 import android.widget.Toast
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -9,6 +10,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,21 +29,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.stringResource
-import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarScrollState())
-    val pagerState = rememberPagerState()
-    val state = PageListState
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -61,88 +58,35 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            TabComp(pagerState)
-            HorizontalPager(
-                count = 2,
-                state = pagerState,
-                userScrollEnabled = true
-            ) {
-                when (it) {
-                    0 -> {
-                        val pageList = rememberPageListPage()
-                        Column {
-                            SearchBar(searchViewModel,
-                                queryParam = pageList.queryParam,
-                                onChangeFiler = {
-                                    pageList.queryParam = MediaQueryParam(
-                                        pageList.queryParam.sortType,
-                                        it
-                                    )
-                                },
-                                onSearch = {
-                                    searchViewModel.provider.load(pageList.page, pageList.queryParam)
-                                }
-                            )
-                            PageList(
-                                state = pageList,
-                                provider = searchViewModel.provider,
-                                supportQueryParam = true
-                            ) { list ->
-                                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                                    items(list) {
-                                        MediaPreviewCard(navController, it)
-                                    }
-                                }
-                            }
+            val pageList = rememberPageListPage()
+            Column {
+                SearchBar(searchViewModel,
+                    queryParam = pageList.queryParam,
+                    onChangeFiler = {
+                        pageList.queryParam = MediaQueryParam(
+                            pageList.queryParam.sortType,
+                            it
+                        )
+                    },
+                    onSearch = {
+                        searchViewModel.provider.load(pageList.page, pageList.queryParam)
+                    }
+                )
+                PageList(
+                    state = pageList,
+                    provider = searchViewModel.provider,
+                    supportQueryParam = true
+                ) { list ->
+                    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                        items(list) {
+                            MediaPreviewCard(navController, it)
                         }
                     }
-                    1 -> {
-                        ComposeWebview(
-                            link = "https://oreno3d.com/",
-                            session = null,
-                            onTitleChange = {}
-                        )
-                    }
                 }
             }
         }
     }
 }
-
-@Composable
-private fun TabComp(pagerState: PagerState) {
-    val scope = rememberCoroutineScope()
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = {
-            TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
-        }
-    ) {
-        Tab(
-            selected = pagerState.currentPage == 0,
-            onClick = {
-                scope.launch {
-                    pagerState.scrollToPage(0)
-                }
-            },
-            text = {
-                Text(text = "本站搜索")
-            }
-        )
-        Tab(
-            selected = pagerState.currentPage == 1,
-            onClick = {
-                scope.launch {
-                    pagerState.scrollToPage(1)
-                }
-            },
-            text = {
-                Text(text = "Oreno3d搜索")
-            }
-        )
-    }
-}
-
 @Composable
 private fun SearchBar(searchViewModel: SearchViewModel,
                       queryParam: MediaQueryParam,
@@ -151,7 +95,8 @@ private fun SearchBar(searchViewModel: SearchViewModel,
 ){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    Card(modifier = Modifier.padding(8.dp)) {
+    var enable by remember{ mutableStateOf(false)}
+    Card(modifier = Modifier.padding(4.dp)) {
         Row(
             modifier =
             Modifier
@@ -180,6 +125,24 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                         if (searchViewModel.query.isNotEmpty()) {
                             IconButton(onClick = { searchViewModel.query = "" }) {
                                 Icon(Icons.Outlined.Close, null)
+                            }
+                        }
+
+                    },
+                    leadingIcon = {
+                        if (enable) {
+                            IconButton(
+                                onClick = {
+                                    enable = !enable
+                                }) {
+                                Icon(Icons.Outlined.ExpandLess, null)
+                            }
+                        }else {
+                            IconButton(
+                                onClick = {
+                                    enable = !enable
+                                }) {
+                                Icon(Icons.Outlined.ExpandMore, null)
                             }
                         }
                     },
@@ -216,35 +179,44 @@ private fun SearchBar(searchViewModel: SearchViewModel,
             }
         }
     }
-    Column {
-        MEDIA_FILTERS.subList(1,2).fastForEach { filter ->
-            FlowRow(
-                modifier = Modifier.fillMaxWidth().padding(10.dp,0.dp),
-                mainAxisSpacing = 8.dp,
-                crossAxisSpacing = (-10).dp,
-                mainAxisAlignment =  FlowMainAxisAlignment.Start,
-                crossAxisAlignment = FlowCrossAxisAlignment.Start
-            ) {
-                filter.value.fastForEach { value ->
-                    val code = "${filter.type}:$value"
-                    FilterChip(
-                        selected = queryParam.filters.contains(code),
-                        onClick = {
-                            val filters = queryParam.filters.toMutableSet()
-                            if (!filters.contains(code)) {
-                                filters.add(code)
-                            } else {
-                                filters.remove(code)
+
+    AnimatedVisibility(
+        visible = enable,
+        enter = fadeIn() + expandVertically(),
+        exit = fadeOut() + shrinkVertically()
+    ){
+        Column {
+            MEDIA_FILTERS.subList(1,2).fastForEach { filter ->
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().padding(10.dp,0.dp),
+                    mainAxisSpacing = 8.dp,
+                    crossAxisSpacing = (-10).dp,
+                    mainAxisAlignment =  FlowMainAxisAlignment.Start,
+                    crossAxisAlignment = FlowCrossAxisAlignment.Start
+                ) {
+                    filter.value.fastForEach { value ->
+                        val code = "${filter.type}:$value"
+                        FilterChip(
+                            selected = queryParam.filters.contains(code),
+                            onClick = {
+                                val filters = queryParam.filters.toMutableSet()
+                                if (!filters.contains(code)) {
+                                    filters.add(code)
+                                } else {
+                                    filters.remove(code)
+                                }
+                                onChangeFiler(filters)
+                                onSearch()
+                            },
+                            label = {
+                                Text(text = (filter.type to value).filterName())
                             }
-                            onChangeFiler(filters)
-                            onSearch()
-                        },
-                        label = {
-                            Text(text = (filter.type to value).filterName())
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+

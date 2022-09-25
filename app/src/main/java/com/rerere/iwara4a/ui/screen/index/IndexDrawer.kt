@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.ui.component.ComposeWebview
 import com.rerere.iwara4a.util.openUrl
 import kotlinx.coroutines.launch
 
@@ -182,6 +183,24 @@ fun IndexDrawer(
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("following")
+                    }
+                }
+            )
+
+            // oreno3d搜索
+            NavigationDrawerItem(
+                selected = false,
+                icon = {
+                    Icon(Icons.Outlined.Search, null)
+                },
+                label = {
+                    Text(text = "Oreno3d搜索")
+                },
+                badge = {},
+                onClick = {
+                    coroutineScope.launch {
+                        drawerState.close()
+                        navController.navigate("oreno3d")
                     }
                 }
             )
