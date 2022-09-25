@@ -36,8 +36,7 @@ class SearchViewModel @Inject constructor(
             if (queryParam != null) {
                 if(queryParam.filters.isEmpty()&&query.isBlank() ) return
             }
-//            if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
-//            if(page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
+            if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
             viewModelScope.launch {
                 data.value = DataState.Loading
                 val response = mediaRepo.search(
