@@ -228,30 +228,9 @@ private fun SearchBar(searchViewModel: SearchViewModel,
             }
         }
         var expand1 by remember { mutableStateOf(false) }
-        var year by remember {
-            val filters = queryParam.filters.toMutableSet()
-            val collect = filters.stream().filter { it.startsWith("created") }.collect(
-                Collectors.toList()
-            )
-            if (collect.isNotEmpty()){
-                mutableStateOf(collect[0].split(":")[1].split("-")[0])
-            }else{
-                mutableStateOf("2022")
-            }
-        }
+        var year by rememberSaveable { mutableStateOf("2022") }
         var expand2 by remember { mutableStateOf(false) }
-        var month by remember {
-            val filters = queryParam.filters.toMutableSet()
-            val collect = filters.stream().filter { it.startsWith("created") }.collect(
-                Collectors.toList()
-            )
-            if (collect.isNotEmpty()) {
-                if(collect[0].split(":")[1].split("-").size != 1){
-                    mutableStateOf(collect[0].split(":")[1].split("-")[1])
-                }
-            }
-            mutableStateOf("All")
-        }
+        var month by rememberSaveable { mutableStateOf("All") }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
