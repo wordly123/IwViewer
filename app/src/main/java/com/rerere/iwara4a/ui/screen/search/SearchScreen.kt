@@ -1,7 +1,10 @@
 package com.rerere.iwara4a.ui.screen.search
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +37,9 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.stringResource
+import java.util.stream.Collectors
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
@@ -87,6 +93,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 private fun SearchBar(searchViewModel: SearchViewModel,
                       queryParam: MediaQueryParam,
@@ -188,7 +195,9 @@ private fun SearchBar(searchViewModel: SearchViewModel,
         Column {
             MEDIA_FILTERS.subList(1,2).fastForEach { filter ->
                 FlowRow(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp,0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp, 0.dp),
                     mainAxisSpacing = 8.dp,
                     crossAxisSpacing = (-10).dp,
                     mainAxisAlignment =  FlowMainAxisAlignment.Start,
@@ -210,6 +219,98 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                             },
                             label = {
                                 Text(text = (filter.type to value).filterName())
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        var expand1 by remember { mutableStateOf(false) }
+        var year by remember { mutableStateOf("2022") }
+        var expand2 by remember { mutableStateOf(false) }
+        var month by remember { mutableStateOf("All") }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 120.dp, 0.dp, 0.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = year,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.clickable{
+                    expand1 = true
+                }
+            )
+            Text(
+                text = " - ",
+                style = MaterialTheme.typography.headlineSmall,
+            )
+            Text(
+                text = month,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.clickable{
+                    expand2 = true
+                }
+            )
+            DropdownMenu(
+                expanded = expand1,
+                onDismissRequest = {
+                    expand1 = false
+                },
+                offset = DpOffset(160.dp, 0.dp),
+            ) {
+                MEDIA_FILTERS_TIME.subList(0,1).fastForEach{ filter ->
+                    filter.value.fastForEach { value ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = value, modifier = Modifier.padding(25.dp,0.dp))
+                            },
+                            onClick = {
+                                val filters = queryParam.filters.toMutableSet()
+                                year = value
+                                expand1 = false
+                                filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
+                                    Collectors.toSet()))
+                                filters.add("${filter.type}:$value")
+                                onChangeFiler(filters)
+                                onSearch()
+                            },
+                        )
+                    }
+                }
+            }
+            DropdownMenu(
+                expanded = expand2,
+                onDismissRequest = {
+                    expand2 = false
+                },
+                offset = DpOffset(300.dp, 0.dp)
+            ) {
+                MEDIA_FILTERS_TIME.subList(1,2).fastForEach{ filter ->
+                    filter.value.fastForEach { value ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = value,
+                                    modifier = Modifier.padding(35.dp,0.dp,0.dp,0.dp)
+                                )
+                            },
+                            onClick = {
+                                month = value
+                                expand2 = false
+                                val filters = queryParam.filters.toMutableSet()
+                                if(value == "All"){
+                                    filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
+                                        Collectors.toSet()))
+                                    filters.add("${filter.type}:"+year)
+                                }else{
+                                    filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
+                                        Collectors.toSet()))
+                                    filters.add("${filter.type}:"+year+"-"+value)
+                                }
+                                onChangeFiler(filters)
+                                onSearch()
                             }
                         )
                     }
