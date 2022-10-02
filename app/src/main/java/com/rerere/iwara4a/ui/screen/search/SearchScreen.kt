@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.room.util.StringUtil
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -102,7 +104,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
 ){
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var enable by remember{ mutableStateOf(false)}
+    var enable by rememberSaveable{ mutableStateOf(false)}
     Card(modifier = Modifier.padding(4.dp)) {
         Row(
             modifier =
@@ -226,9 +228,30 @@ private fun SearchBar(searchViewModel: SearchViewModel,
             }
         }
         var expand1 by remember { mutableStateOf(false) }
-        var year by remember { mutableStateOf("2022") }
+        var year by remember {
+            val filters = queryParam.filters.toMutableSet()
+            val collect = filters.stream().filter { it.startsWith("created") }.collect(
+                Collectors.toList()
+            )
+            if (collect.isNotEmpty()){
+                mutableStateOf(collect[0].split(":")[1].split("-")[0])
+            }else{
+                mutableStateOf("2022")
+            }
+        }
         var expand2 by remember { mutableStateOf(false) }
-        var month by remember { mutableStateOf("All") }
+        var month by remember {
+            val filters = queryParam.filters.toMutableSet()
+            val collect = filters.stream().filter { it.startsWith("created") }.collect(
+                Collectors.toList()
+            )
+            if (collect.isNotEmpty()) {
+                if(collect[0].split(":")[1].split("-").size != 1){
+                    mutableStateOf(collect[0].split(":")[1].split("-")[1])
+                }
+            }
+            mutableStateOf("All")
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -258,7 +281,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                 onDismissRequest = {
                     expand1 = false
                 },
-                offset = DpOffset(160.dp, 0.dp),
+                offset = DpOffset(120.dp, 0.dp),
             ) {
                 MEDIA_FILTERS_TIME.subList(0,1).fastForEach{ filter ->
                     filter.value.fastForEach { value ->
@@ -285,7 +308,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                 onDismissRequest = {
                     expand2 = false
                 },
-                offset = DpOffset(300.dp, 0.dp)
+                offset = DpOffset(280.dp, 0.dp)
             ) {
                 MEDIA_FILTERS_TIME.subList(1,2).fastForEach{ filter ->
                     filter.value.fastForEach { value ->
