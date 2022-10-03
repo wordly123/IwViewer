@@ -34,7 +34,7 @@ class SearchViewModel @Inject constructor(
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
             if (queryParam != null) {
-                if(queryParam.filters.isEmpty()&&query.isBlank() ) return
+                if(queryParam.filters.isEmpty()&&query.isBlank() && queryParam.sortType == SortType.DATE) return
             }
             if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
             viewModelScope.launch {

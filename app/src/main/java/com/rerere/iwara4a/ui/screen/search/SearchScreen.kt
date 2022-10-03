@@ -4,6 +4,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -26,7 +27,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -70,6 +73,12 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
             Column {
                 SearchBar(searchViewModel,
                     queryParam = pageList.queryParam,
+                    onChangeSort = {
+                        pageList.queryParam = MediaQueryParam(
+                            sortType = it,
+                            filters = pageList.queryParam.filters
+                        )
+                    },
                     onChangeFiler = {
                         pageList.queryParam = MediaQueryParam(
                             pageList.queryParam.sortType,
@@ -95,16 +104,20 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
-private fun SearchBar(searchViewModel: SearchViewModel,
-                      queryParam: MediaQueryParam,
-                      onChangeFiler: (MutableSet<String>) -> Unit,
-                      onSearch: () -> Unit
-){
+private fun SearchBar(
+    searchViewModel: SearchViewModel,
+    queryParam: MediaQueryParam,
+    onChangeFiler: (MutableSet<String>) -> Unit,
+    onChangeSort: (SortType) -> Unit,
+    onSearch: () -> Unit
+) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var enable by rememberSaveable{ mutableStateOf(false)}
+    var enable by rememberSaveable { mutableStateOf(false) }
+    var select by rememberSaveable { mutableStateOf(1) }
     Card(modifier = Modifier.padding(4.dp)) {
         Row(
             modifier =
@@ -146,7 +159,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                                 }) {
                                 Icon(Icons.Outlined.ExpandLess, null)
                             }
-                        }else {
+                        } else {
                             IconButton(
                                 onClick = {
                                     enable = !enable
@@ -193,16 +206,16 @@ private fun SearchBar(searchViewModel: SearchViewModel,
         visible = enable,
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
-    ){
+    ) {
         Column {
-            MEDIA_FILTERS.subList(1,2).fastForEach { filter ->
+            MEDIA_FILTERS.subList(1, 2).fastForEach { filter ->
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp, 0.dp),
                     mainAxisSpacing = 8.dp,
                     crossAxisSpacing = (-10).dp,
-                    mainAxisAlignment =  FlowMainAxisAlignment.Start,
+                    mainAxisAlignment = FlowMainAxisAlignment.Start,
                     crossAxisAlignment = FlowCrossAxisAlignment.Start
                 ) {
                     filter.value.fastForEach { value ->
@@ -240,7 +253,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
             Text(
                 text = year,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.clickable{
+                modifier = Modifier.clickable {
                     expand1 = true
                 }
             )
@@ -251,7 +264,7 @@ private fun SearchBar(searchViewModel: SearchViewModel,
             Text(
                 text = month,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.clickable{
+                modifier = Modifier.clickable {
                     expand2 = true
                 }
             )
@@ -262,18 +275,21 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                 },
                 offset = DpOffset(120.dp, 0.dp),
             ) {
-                MEDIA_FILTERS_TIME.subList(0,1).fastForEach{ filter ->
+                MEDIA_FILTERS_TIME.subList(0, 1).fastForEach { filter ->
                     filter.value.fastForEach { value ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = value, modifier = Modifier.padding(25.dp,0.dp))
+                                Text(text = value, modifier = Modifier.padding(25.dp, 0.dp))
                             },
                             onClick = {
                                 val filters = queryParam.filters.toMutableSet()
                                 year = value
                                 expand1 = false
-                                filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
-                                    Collectors.toSet()))
+                                filters.removeAll(
+                                    filters.stream().filter { it.startsWith(filter.type) }.collect(
+                                        Collectors.toSet()
+                                    )
+                                )
                                 filters.add("${filter.type}:$value")
                                 onChangeFiler(filters)
                                 onSearch()
@@ -289,27 +305,35 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                 },
                 offset = DpOffset(280.dp, 0.dp)
             ) {
-                MEDIA_FILTERS_TIME.subList(1,2).fastForEach{ filter ->
+                MEDIA_FILTERS_TIME.subList(1, 2).fastForEach { filter ->
                     filter.value.fastForEach { value ->
                         DropdownMenuItem(
                             text = {
                                 Text(
                                     text = value,
-                                    modifier = Modifier.padding(35.dp,0.dp,0.dp,0.dp)
+                                    modifier = Modifier.padding(35.dp, 0.dp, 0.dp, 0.dp)
                                 )
                             },
                             onClick = {
                                 month = value
                                 expand2 = false
                                 val filters = queryParam.filters.toMutableSet()
-                                if(value == "All"){
-                                    filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
-                                        Collectors.toSet()))
-                                    filters.add("${filter.type}:"+year)
-                                }else{
-                                    filters.removeAll(filters.stream().filter { it.startsWith(filter.type) }.collect(
-                                        Collectors.toSet()))
-                                    filters.add("${filter.type}:"+year+"-"+value)
+                                if (value == "All") {
+                                    filters.removeAll(
+                                        filters.stream().filter { it.startsWith(filter.type) }
+                                            .collect(
+                                                Collectors.toSet()
+                                            )
+                                    )
+                                    filters.add("${filter.type}:" + year)
+                                } else {
+                                    filters.removeAll(
+                                        filters.stream().filter { it.startsWith(filter.type) }
+                                            .collect(
+                                                Collectors.toSet()
+                                            )
+                                    )
+                                    filters.add("${filter.type}:" + year + "-" + value)
                                 }
                                 onChangeFiler(filters)
                                 onSearch()
@@ -319,7 +343,52 @@ private fun SearchBar(searchViewModel: SearchViewModel,
                 }
             }
         }
+        if (queryParam.filters.size != 0
+            ||
+            queryParam.filters.stream().filter { it.startsWith("created") }.collect(
+                Collectors.toSet()
+            ).size != 0
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 160.dp, 0.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = "最新日期",
+                    modifier = Modifier.clickable {
+                        select = 1
+                        onChangeSort(SortType.DATE)
+                        onSearch()
+                    },
+                    fontWeight = if (select == 1) FontWeight.Bold else null,
+                    textDecoration = if (select == 1) TextDecoration.Underline else null
+                )
+                Text(
+                    text = "最多播放量",
+                    modifier = Modifier.clickable {
+                        select = 2
+                        onChangeSort(SortType.VIEWS)
+                        onSearch()
+                    },
+                    fontWeight = if (select == 2) FontWeight.Bold else null,
+                    textDecoration = if (select == 2) TextDecoration.Underline else null
+                )
+                Text(
+                    text = "最多收藏",
+                    modifier = Modifier.clickable {
+                        select = 3
+                        onChangeSort(SortType.LIKES)
+                        onSearch()
+                    },
+                    fontWeight = if (select == 3) FontWeight.Bold else null,
+                    textDecoration = if (select == 3) TextDecoration.Underline else null
+                )
+            }
+        }
     }
 }
+
 
 
