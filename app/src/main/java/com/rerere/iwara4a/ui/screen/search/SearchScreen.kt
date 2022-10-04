@@ -195,6 +195,13 @@ private fun SearchBar(
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    val filters = queryParam.filters.toMutableSet()
+                    if (queryParam.filters.stream().filter { it.startsWith("created") }.collect(
+                            Collectors.toSet()
+                        ).size == 0){
+                        filters.add("created:$year")
+                        onChangeFiler(filters)
+                    }
                     focusManager.clearFocus()
                     onSearch()
                 }
