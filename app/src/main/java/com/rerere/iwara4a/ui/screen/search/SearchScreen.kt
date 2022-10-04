@@ -118,6 +118,8 @@ private fun SearchBar(
     val focusManager = LocalFocusManager.current
     var enable by rememberSaveable { mutableStateOf(false) }
     var select by rememberSaveable { mutableStateOf(1) }
+    var year by rememberSaveable { mutableStateOf("2022") }
+    var month by rememberSaveable { mutableStateOf("All") }
     Card(modifier = Modifier.padding(4.dp)) {
         Row(
             modifier =
@@ -241,9 +243,7 @@ private fun SearchBar(
             }
         }
         var expand1 by remember { mutableStateOf(false) }
-        var year by rememberSaveable { mutableStateOf("2022") }
         var expand2 by remember { mutableStateOf(false) }
-        var month by rememberSaveable { mutableStateOf("All") }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
