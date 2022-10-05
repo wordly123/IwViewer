@@ -294,11 +294,10 @@ fun LargeScreenVideoPlayer(
                     modifier = Modifier
                         .fillMaxSize(),
                     state = pagerState,
-                    count = 3
+                    count = 1
                 ) {
                     when (it) {
                         0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
-                        1 -> VideoScreenSimilarVideoTab(videoDetail)
                     }
                 }
             }
@@ -378,12 +377,11 @@ private fun CompatVideoPlayer(
                         .fillMaxWidth()
                         .weight(1f),
                     state = pagerState,
-                    count = 3
+                    count = 2
                 ) {
                     when (it) {
                         0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
                         1 -> VideoScreenCommentTab(videoViewModel)
-                        2 -> VideoScreenSimilarVideoTab(videoDetail)
                     }
                 }
             }

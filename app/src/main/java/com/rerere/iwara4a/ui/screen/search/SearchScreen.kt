@@ -38,10 +38,15 @@ import androidx.room.util.StringUtil
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
+import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.util.stringResource
+import kotlinx.coroutines.launch
 import java.util.stream.Collectors
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -116,8 +121,9 @@ private fun SearchBar(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var enable by rememberSaveable { mutableStateOf(false) }
-    var select by rememberSaveable { mutableStateOf(1) }
+    var enable by rememberSaveable { mutableStateOf(true) }
+    var selectSort by rememberSaveable { mutableStateOf(1) }
+    var selectType by rememberSaveable { mutableStateOf(1) }
     var year by rememberSaveable { mutableStateOf("2022") }
     var month by rememberSaveable { mutableStateOf("All") }
     Card(modifier = Modifier.padding(4.dp)) {
@@ -224,6 +230,48 @@ private fun SearchBar(
         exit = fadeOut() + shrinkVertically()
     ) {
         Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = stringResource(R.string.video),
+                    modifier = Modifier.clickable {
+                        selectType = 1
+                        val filters = queryParam.filters.toMutableSet()
+                        filters.removeAll(
+                            filters.stream().filter { it.startsWith("type:") }
+                                .collect(
+                                    Collectors.toSet()
+                                )
+                        )
+                        filters.add("type:video")
+                        onChangeFiler(filters)
+                        onSearch()
+                    },
+                    fontWeight = if (selectType == 1) FontWeight.Bold else null,
+                    textDecoration = if (selectType == 1) TextDecoration.Underline else null
+                )
+                Text(
+                    text = stringResource(R.string.image),
+                    modifier = Modifier.clickable {
+                        selectType = 2
+                        val filters = queryParam.filters.toMutableSet()
+                        filters.removeAll(
+                            filters.stream().filter { it.startsWith("type:") }
+                                .collect(
+                                    Collectors.toSet()
+                                )
+                        )
+                        filters.add("type:image")
+                        onChangeFiler(filters)
+                        onSearch()
+                    },
+                    fontWeight = if (selectType == 2) FontWeight.Bold else null,
+                    textDecoration = if (selectType == 2) TextDecoration.Underline else null
+                )
+            }
             MEDIA_FILTERS.subList(1, 2).fastForEach { filter ->
                 FlowRow(
                     modifier = Modifier
@@ -261,7 +309,7 @@ private fun SearchBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp, 120.dp, 0.dp, 0.dp),
+                .padding(0.dp, 130.dp, 0.dp, 0.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -366,43 +414,40 @@ private fun SearchBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 160.dp, 0.dp, 0.dp),
+                    .padding(0.dp, 170.dp, 0.dp, 0.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
                     text = "最新日期",
                     modifier = Modifier.clickable {
-                        select = 1
+                        selectSort = 1
                         onChangeSort(SortType.DATE)
                         onSearch()
                     },
-                    fontWeight = if (select == 1) FontWeight.Bold else null,
-                    textDecoration = if (select == 1) TextDecoration.Underline else null
+                    fontWeight = if (selectSort == 1) FontWeight.Bold else null,
+                    textDecoration = if (selectSort == 1) TextDecoration.Underline else null
                 )
                 Text(
-                    text = "最多播放量",
+                    text = "最多点击",
                     modifier = Modifier.clickable {
-                        select = 2
+                        selectSort = 2
                         onChangeSort(SortType.VIEWS)
                         onSearch()
                     },
-                    fontWeight = if (select == 2) FontWeight.Bold else null,
-                    textDecoration = if (select == 2) TextDecoration.Underline else null
+                    fontWeight = if (selectSort == 2) FontWeight.Bold else null,
+                    textDecoration = if (selectSort == 2) TextDecoration.Underline else null
                 )
                 Text(
                     text = "最多收藏",
                     modifier = Modifier.clickable {
-                        select = 3
+                        selectSort = 3
                         onChangeSort(SortType.LIKES)
                         onSearch()
                     },
-                    fontWeight = if (select == 3) FontWeight.Bold else null,
-                    textDecoration = if (select == 3) TextDecoration.Underline else null
+                    fontWeight = if (selectSort == 3) FontWeight.Bold else null,
+                    textDecoration = if (selectSort == 3) TextDecoration.Underline else null
                 )
             }
         }
     }
 }
-
-
-
