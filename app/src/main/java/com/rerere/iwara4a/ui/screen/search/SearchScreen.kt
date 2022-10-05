@@ -4,7 +4,6 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -34,19 +33,13 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.room.util.StringUtil
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
-import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.util.stringResource
-import kotlinx.coroutines.launch
 import java.util.stream.Collectors
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -229,7 +222,7 @@ private fun SearchBar(
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
-        Column {
+        Column(verticalArrangement  = Arrangement.SpaceEvenly) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -303,150 +296,148 @@ private fun SearchBar(
                     }
                 }
             }
-        }
-        var expand1 by remember { mutableStateOf(false) }
-        var expand2 by remember { mutableStateOf(false) }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 130.dp, 0.dp, 0.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = year,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.clickable {
-                    expand1 = true
-                }
-            )
-            Text(
-                text = " - ",
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            Text(
-                text = month,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.clickable {
-                    expand2 = true
-                }
-            )
-            DropdownMenu(
-                expanded = expand1,
-                onDismissRequest = {
-                    expand1 = false
-                },
-                offset = DpOffset(120.dp, 0.dp),
-            ) {
-                MEDIA_FILTERS_TIME.subList(0, 1).fastForEach { filter ->
-                    filter.value.fastForEach { value ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = value, modifier = Modifier.padding(25.dp, 0.dp))
-                            },
-                            onClick = {
-                                val filters = queryParam.filters.toMutableSet()
-                                year = value
-                                expand1 = false
-                                filters.removeAll(
-                                    filters.stream().filter { it.startsWith(filter.type) }.collect(
-                                        Collectors.toSet()
-                                    )
-                                )
-                                filters.add("${filter.type}:$value")
-                                onChangeFiler(filters)
-                                onSearch()
-                            },
-                        )
-                    }
-                }
-            }
-            DropdownMenu(
-                expanded = expand2,
-                onDismissRequest = {
-                    expand2 = false
-                },
-                offset = DpOffset(280.dp, 0.dp)
-            ) {
-                MEDIA_FILTERS_TIME.subList(1, 2).fastForEach { filter ->
-                    filter.value.fastForEach { value ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = value,
-                                    modifier = Modifier.padding(35.dp, 0.dp, 0.dp, 0.dp)
-                                )
-                            },
-                            onClick = {
-                                month = value
-                                expand2 = false
-                                val filters = queryParam.filters.toMutableSet()
-                                if (value == "All") {
-                                    filters.removeAll(
-                                        filters.stream().filter { it.startsWith(filter.type) }
-                                            .collect(
-                                                Collectors.toSet()
-                                            )
-                                    )
-                                    filters.add("${filter.type}:" + year)
-                                } else {
-                                    filters.removeAll(
-                                        filters.stream().filter { it.startsWith(filter.type) }
-                                            .collect(
-                                                Collectors.toSet()
-                                            )
-                                    )
-                                    filters.add("${filter.type}:" + year + "-" + value)
-                                }
-                                onChangeFiler(filters)
-                                onSearch()
-                            }
-                        )
-                    }
-                }
-            }
-        }
-        if (queryParam.filters.size != 0
-            ||
-            queryParam.filters.stream().filter { it.startsWith("created") }.collect(
-                Collectors.toSet()
-            ).size != 0
-        ) {
+            var expand1 by remember { mutableStateOf(false) }
+            var expand2 by remember { mutableStateOf(false) }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 170.dp, 0.dp, 0.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "最新日期",
+                    text = year,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.clickable {
-                        selectSort = 1
-                        onChangeSort(SortType.DATE)
-                        onSearch()
-                    },
-                    fontWeight = if (selectSort == 1) FontWeight.Bold else null,
-                    textDecoration = if (selectSort == 1) TextDecoration.Underline else null
+                        expand1 = true
+                    }
                 )
                 Text(
-                    text = "最多点击",
-                    modifier = Modifier.clickable {
-                        selectSort = 2
-                        onChangeSort(SortType.VIEWS)
-                        onSearch()
-                    },
-                    fontWeight = if (selectSort == 2) FontWeight.Bold else null,
-                    textDecoration = if (selectSort == 2) TextDecoration.Underline else null
+                    text = " - ",
+                    style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
-                    text = "最多收藏",
+                    text = month,
+                    style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.clickable {
-                        selectSort = 3
-                        onChangeSort(SortType.LIKES)
-                        onSearch()
-                    },
-                    fontWeight = if (selectSort == 3) FontWeight.Bold else null,
-                    textDecoration = if (selectSort == 3) TextDecoration.Underline else null
+                        expand2 = true
+                    }
                 )
+                DropdownMenu(
+                    expanded = expand1,
+                    onDismissRequest = {
+                        expand1 = false
+                    },
+                    offset = DpOffset(120.dp, 0.dp),
+                ) {
+                    MEDIA_FILTERS_TIME.subList(0, 1).fastForEach { filter ->
+                        filter.value.fastForEach { value ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = value, modifier = Modifier.padding(25.dp, 0.dp))
+                                },
+                                onClick = {
+                                    val filters = queryParam.filters.toMutableSet()
+                                    year = value
+                                    expand1 = false
+                                    filters.removeAll(
+                                        filters.stream().filter { it.startsWith(filter.type) }.collect(
+                                            Collectors.toSet()
+                                        )
+                                    )
+                                    filters.add("${filter.type}:$value")
+                                    onChangeFiler(filters)
+                                    onSearch()
+                                },
+                            )
+                        }
+                    }
+                }
+                DropdownMenu(
+                    expanded = expand2,
+                    onDismissRequest = {
+                        expand2 = false
+                    },
+                    offset = DpOffset(280.dp, 0.dp)
+                ) {
+                    MEDIA_FILTERS_TIME.subList(1, 2).fastForEach { filter ->
+                        filter.value.fastForEach { value ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = value,
+                                        modifier = Modifier.padding(35.dp, 0.dp, 0.dp, 0.dp)
+                                    )
+                                },
+                                onClick = {
+                                    month = value
+                                    expand2 = false
+                                    val filters = queryParam.filters.toMutableSet()
+                                    if (value == "All") {
+                                        filters.removeAll(
+                                            filters.stream().filter { it.startsWith(filter.type) }
+                                                .collect(
+                                                    Collectors.toSet()
+                                                )
+                                        )
+                                        filters.add("${filter.type}:" + year)
+                                    } else {
+                                        filters.removeAll(
+                                            filters.stream().filter { it.startsWith(filter.type) }
+                                                .collect(
+                                                    Collectors.toSet()
+                                                )
+                                        )
+                                        filters.add("${filter.type}:" + year + "-" + value)
+                                    }
+                                    onChangeFiler(filters)
+                                    onSearch()
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+            if (queryParam.filters.size != 0
+                ||
+                queryParam.filters.stream().filter { it.startsWith("created") }.collect(
+                    Collectors.toSet()
+                ).size != 0
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = "最新日期",
+                        modifier = Modifier.clickable {
+                            selectSort = 1
+                            onChangeSort(SortType.DATE)
+                            onSearch()
+                        },
+                        fontWeight = if (selectSort == 1) FontWeight.Bold else null,
+                        textDecoration = if (selectSort == 1) TextDecoration.Underline else null
+                    )
+                    Text(
+                        text = "最多点击",
+                        modifier = Modifier.clickable {
+                            selectSort = 2
+                            onChangeSort(SortType.VIEWS)
+                            onSearch()
+                        },
+                        fontWeight = if (selectSort == 2) FontWeight.Bold else null,
+                        textDecoration = if (selectSort == 2) TextDecoration.Underline else null
+                    )
+                    Text(
+                        text = "最多收藏",
+                        modifier = Modifier.clickable {
+                            selectSort = 3
+                            onChangeSort(SortType.LIKES)
+                            onSearch()
+                        },
+                        fontWeight = if (selectSort == 3) FontWeight.Bold else null,
+                        textDecoration = if (selectSort == 3) TextDecoration.Underline else null
+                    )
+                }
             }
         }
     }
