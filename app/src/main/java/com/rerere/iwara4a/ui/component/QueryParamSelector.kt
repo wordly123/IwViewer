@@ -44,12 +44,12 @@ data class MediaFilter(
 }
 
 val MEDIA_FILTERS = listOf(
-    MediaFilter("created", "2022", "2022-09", "2022-08", "2021", "2020", "2019", "2018"),
+    MediaFilter("created", "2023"),
     MediaFilter("field_categories","1","6","7","8","33","34","16104","16105","16190","31263","31264","31265"),
 )
 
 val MEDIA_FILTERS_TIME = listOf(
-    MediaFilter("created", "2022", "2021", "2020", "2019", "2018", "2017"),
+    MediaFilter("created", "All","2023","2022","2021", "2020", "2019", "2018", "2017"),
     MediaFilter("created", "All","01", "02", "03", "04", "05", "06","07","08","09","10","11","12"),
 )
 

@@ -117,7 +117,7 @@ private fun SearchBar(
     var enable by rememberSaveable { mutableStateOf(true) }
     var selectSort by rememberSaveable { mutableStateOf(1) }
     var selectType by rememberSaveable { mutableStateOf(1) }
-    var year by rememberSaveable { mutableStateOf("2022") }
+    var year by rememberSaveable { mutableStateOf("2023") }
     var month by rememberSaveable { mutableStateOf("All") }
     Card(modifier = Modifier.padding(4.dp)) {
         Row(
@@ -182,7 +182,7 @@ private fun SearchBar(
                                 val filters = queryParam.filters.toMutableSet()
                                 if (queryParam.filters.stream().filter { it.startsWith("created") }.collect(
                                         Collectors.toSet()
-                                    ).size == 0){
+                                    ).size == 0 && year != "All"){
                                     filters.add("created:$year")
                                     onChangeFiler(filters)
                                 }
@@ -204,7 +204,7 @@ private fun SearchBar(
                     val filters = queryParam.filters.toMutableSet()
                     if (queryParam.filters.stream().filter { it.startsWith("created") }.collect(
                             Collectors.toSet()
-                        ).size == 0){
+                        ).size == 0 && year != "All"){
                         filters.add("created:$year")
                         onChangeFiler(filters)
                     }
@@ -343,7 +343,9 @@ private fun SearchBar(
                                             Collectors.toSet()
                                         )
                                     )
-                                    filters.add("${filter.type}:$value")
+                                    if (year != "All"){
+                                        filters.add("${filter.type}:$value")
+                                    }
                                     onChangeFiler(filters)
                                     onSearch()
                                 },
@@ -387,6 +389,14 @@ private fun SearchBar(
                                                 )
                                         )
                                         filters.add("${filter.type}:" + year + "-" + value)
+                                    }
+                                    if(year == "All"){
+                                        filters.removeAll(
+                                            filters.stream().filter { it.startsWith(filter.type) }
+                                                .collect(
+                                                    Collectors.toSet()
+                                                )
+                                        )
                                     }
                                     onChangeFiler(filters)
                                     onSearch()

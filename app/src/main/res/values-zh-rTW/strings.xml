@@ -108,6 +108,7 @@
     <string name="screen_video_description_unlike_fail">操作失敗</string>
     <string name="screen_video_description_like_status_liked">喜欢</string>
     <string name="screen_video_description_like_status_no_like">喜欢</string>
+    <string name="screen_video_description_share">分享</string>
     <string name="screen_video_description_download_button_inapp">在應用裏下載</string>
     <string name="screen_video_description_download_button_inapp_add_queue">已加入下載列表</string>
     <string name="screen_video_description_download_fail_resolve">影片載入失敗</string>

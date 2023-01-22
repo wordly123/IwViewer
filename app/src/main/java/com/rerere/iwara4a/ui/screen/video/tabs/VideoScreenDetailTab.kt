@@ -280,5 +280,10 @@ private fun ColumnScope.Actions(
         ) {
             Text(text = stringResource(id = R.string.screen_video_description_download_button_label))
         }
+        OutlinedButton(
+            onClick = { context.shareMedia(MediaType.VIDEO, videoDetail.id) }
+        ) {
+            Text(text = stringResource(id = R.string.screen_video_description_share))
+        }
     }
 }

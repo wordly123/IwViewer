@@ -107,6 +107,7 @@
     <string name="screen_video_description_unlike_fail">取消点赞失败</string>
     <string name="screen_video_description_like_status_liked">已喜欢</string>
     <string name="screen_video_description_like_status_no_like">喜欢</string>
+    <string name="screen_video_description_share">分享</string>
     <string name="screen_video_description_download_button_inapp">APP内下载</string>
     <string name="screen_video_description_download_button_inapp_add_queue">已加入下载队列</string>
     <string name="screen_video_description_download_fail_resolve">视频地址解析失败</string>
