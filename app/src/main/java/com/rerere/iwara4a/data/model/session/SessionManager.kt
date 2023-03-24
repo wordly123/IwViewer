@@ -8,17 +8,14 @@ class SessionManager(private val context: Context) {
     val session: Session by lazy {
         val sharedPreferences = context.sharedPreferencesOf("session")
         Session(
-            sharedPreferences.getString("key", "")!!,
-            sharedPreferences.getString("value", "")!!
+            sharedPreferences.getString("key", "")!!
         )
     }
 
-    fun update(key: String, value: String) {
+    fun update(key: String) {
         session.key = key
-        session.value = value
         context.sharedPreferencesOf("session").edit {
             putString("key", key)
-            putString("value", value)
         }
     }
 }

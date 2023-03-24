@@ -27,8 +27,11 @@ import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.IOException
@@ -49,75 +52,28 @@ class IwaraParser(
 ) {
     private val gson = Gson()
     private val mediaHttpClient = OkHttpClient.Builder()
-        .cookieJar(CookieJarHelper())
         .dns(SmartDns)
         .build()
-
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
             Log.i(TAG, "login: 开始登录")
             try {
-                okHttpClient.getCookie().clean()
-
-                // 首先访问login页面解析出 antibot_key
                 Log.i(TAG, "login: 开始发起请求: $username/$password")
-                val keyRequest = Request.Builder()
-                    .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
-                    .get()
-                    .build()
-                val keyResponse = okHttpClient.newCall(keyRequest).await()
-                val keyResponseData = keyResponse.body.string()
-                val headElement = Jsoup.parse(keyResponseData).head().html()
-                val startIndex = headElement.indexOf("key\":\"") + 6
-                val endIndex = headElement.indexOf("\"", startIndex)
-                val key = headElement.substring(startIndex until endIndex)
-                val formBuildId = Jsoup.parse(keyResponseData)
-                    .body()
-                    .select("form[id=user-login]")
-                    .first()
-                    ?.select("input[name=form_build_id]")
-                    ?.first()
-                    ?.attr("value") ?: error("empty build id")
-                Log.i(TAG, "login: antibot_key = $key buildId: $formBuildId")
-
-                // 发送登录POST请求
-                val formBody = FormBody.Builder()
-                    .add("name", username)
-                    .add("pass", password)
-                    .add("form_id", "user_login")
-                    .add("antibot_key", key)
-                    .add("form_build_id", formBuildId)
-                    .add("op", "ログイン")
-                    .build()
+                //把用户名和密码放到map中转成JSON字符串
+                val map = mapOf("email" to username, "password" to password)
+                val json = gson.toJson(map)
                 val loginRequest = Request.Builder()
-                    .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
-                    .post(formBody)
+                    .url("https://api.iwara.tv/user/login")
+                    .post(RequestBody.create("application/json; charset=utf-8".toMediaType(), json))
                     .build()
                 val loginResponse = okHttpClient.newCall(loginRequest).await()
-                Log.i(TAG, "login: ${loginResponse.code}/${loginResponse.message}")
-                if (loginResponse.code == 403) {
-                    return@withContext Response.failed("403: 多次输入错误的密码被暂时拒绝登录? 请尝试前往网页端登录")
+                if (loginResponse.code == 400) {
+                    return@withContext Response.failed("错误的密码")
                 }
                 require(loginResponse.isSuccessful)
-
-                val cookies = okHttpClient.getCookie().filter { it.domain == "iwara.tv" }
-                cookies.forEach {
-                    Log.i(TAG, "login: current cookie -> ${it.name}: ${it.value}")
-                }
-                if (cookies.isNotEmpty()) {
-                    val cookie = cookies.first()
-                    Log.i(
-                        TAG,
-                        "login: Successful login (key:${cookie.name}, value:${cookie.value})"
-                    )
-                    Response.success(Session(cookie.name, cookie.value))
-                } else {
-                    val title = Jsoup.parse(loginResponse.body.string())
-                        .select("div[class=messages error]")
-                        .first()
-                        ?.text() ?: "未知登录错误, 建议前往网页版测试登录"
-                    Response.failed(title)
-                }
+                //获取登录后的token组成 用于后续的请求
+                val token = JSONObject(loginResponse.body.string()).get("token").toString()
+                Response.success(Session(token))
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 Response.failed(if (exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
@@ -127,7 +83,7 @@ class IwaraParser(
     suspend fun getSelf(session: Session): Response<Self> = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "getSelf: Start...")
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             val request = Request.Builder()
                 .url("https://ecchi.iwara.tv/user")
@@ -223,8 +179,7 @@ class IwaraParser(
     suspend fun getSubscriptionList(session: Session, page: Int): Response<SubscriptionList> =
         withContext(Dispatchers.IO) {
             try {
-                okHttpClient.getCookie().init(session)
-
+                session.getToken()
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/subscriptions?page=$page")
                     .get()
@@ -284,7 +239,7 @@ class IwaraParser(
             try {
                 Log.i(TAG, "getImagePageDetail: start load image detail: $imageId")
 
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/images/$imageId")
@@ -335,7 +290,7 @@ class IwaraParser(
             try {
                 Log.i(TAG, "getVideoPageDetail: Start load video detail (id:$videoId)")
 
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/videos/$videoId?language=zh-hans")
@@ -557,7 +512,7 @@ class IwaraParser(
     ): Response<LikeResponse> =
         withContext(Dispatchers.IO) {
             try {
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/flag/${if (like) "flag" else "unflag"}/like/$likeLink")
@@ -583,7 +538,7 @@ class IwaraParser(
         followLink: String
     ): Response<FollowResponse> = withContext(Dispatchers.IO) {
         try {
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             val request = Request.Builder()
                 .url("https://ecchi.iwara.tv/flag/${if (follow) "flag" else "unflag"}/follow/$followLink")
@@ -610,7 +565,7 @@ class IwaraParser(
         page: Int
     ): Response<CommentList> = withContext(Dispatchers.IO) {
         try {
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             Log.i(TAG, "getCommentList: Loading comments of: $mediaId (${mediaType.value})")
 
@@ -736,7 +691,7 @@ class IwaraParser(
                 TAG,
                 "getMediaList: Start loading media list (type:${mediaType.value}, page: $page, sort: $sort)"
             )
-            mediaHttpClient.getCookie().init(session)
+            session.getToken()
 
             fun collectFilters(): String {
                 var index = 0
@@ -806,7 +761,7 @@ class IwaraParser(
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "getUser: Start load user data: $userId")
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/users/$userId")
@@ -926,7 +881,7 @@ class IwaraParser(
         try {
             Log.i(TAG, "getUserVideoList: $userIdOnVideo // $page")
 
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             val request = Request.Builder()
                 .url("https://ecchi.iwara.tv/users/$userIdOnVideo/${mediaType.value}?page=$page")
@@ -989,7 +944,7 @@ class IwaraParser(
         @IntRange(from = 0) page: Int
     ): Response<CommentList> = withContext(Dispatchers.IO) {
         try {
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             Log.i(TAG, "getUserPageComment: user = $userId, page = $page")
 
@@ -1117,7 +1072,7 @@ class IwaraParser(
                 TAG,
                 "search: Start searching (query=$query, page=$page, sort=${sort.name})"
             )
-            okHttpClient.getCookie().init(session)
+            session.getToken()
 
             fun collectFilters(): String {
                 var index = 0
@@ -1210,7 +1165,7 @@ class IwaraParser(
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "getLikePage: $page")
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/user/liked?page=$page")
@@ -1277,7 +1232,7 @@ class IwaraParser(
     ) {
         withContext(Dispatchers.IO) {
             try {
-                okHttpClient.getCookie().init(session)
+                session.getToken()
 
                 Log.i(TAG, "postComment: $nid | $commentId | $content")
 

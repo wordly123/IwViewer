@@ -48,7 +48,7 @@ class LoginViewModel @Inject constructor(
             // call event
             if (response.isSuccess()) {
                 val session = response.read()
-                sessionManager.update(session.key, session.value)
+                sessionManager.update(session.key)
                 viewModel.prepareUserData()
             } else {
                 errorContent = response.errorMessage()

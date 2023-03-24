@@ -6,7 +6,6 @@ import com.rerere.iwara4a.data.api.backend.Iwara4aBackendAPI
 import com.rerere.iwara4a.data.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.data.api.service.IwaraParser
 import com.rerere.iwara4a.data.api.service.IwaraService
-import com.rerere.iwara4a.util.okhttp.CookieJarHelper
 import com.rerere.iwara4a.util.okhttp.Retry
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
@@ -34,7 +33,7 @@ object NetworkModule {
         .callTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
         .addInterceptor(UserAgentInterceptor())
         //.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
-        .cookieJar(CookieJarHelper())
+        //.cookieJar(CookieJarHelper())
         .addInterceptor(Retry())
         .dns(SmartDns)
         .build()
