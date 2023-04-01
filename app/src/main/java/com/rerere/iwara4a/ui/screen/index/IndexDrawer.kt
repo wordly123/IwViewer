@@ -100,7 +100,7 @@ fun IndexDrawer(
                 Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)) {
                     // UserName
                     Text(
-                        text = if (isLoading()) stringResource(id = R.string.loading) else indexViewModel.self.nickname,
+                        text = if (isLoading()) stringResource(id = R.string.loading) else indexViewModel.self.name,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )

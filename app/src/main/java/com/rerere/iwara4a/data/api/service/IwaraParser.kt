@@ -54,6 +54,7 @@ class IwaraParser(
     private val mediaHttpClient = OkHttpClient.Builder()
         .dns(SmartDns)
         .build()
+
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
             Log.i(TAG, "login: 开始登录")
@@ -82,96 +83,62 @@ class IwaraParser(
 
     suspend fun getSelf(session: Session): Response<Self> = withContext(Dispatchers.IO) {
         try {
-            Log.i(TAG, "getSelf: Start...")
-            session.getToken()
-
-            val request = Request.Builder()
-                .url("https://ecchi.iwara.tv/user")
+            val token = getToken(session.getToken())
+            if (token.isEmpty()) {
+                return@withContext Response.failed("获取token失败")
+            }
+            val user = Request.Builder()
+                .url("https://api.iwara.tv/user")
                 .get()
+                .addHeader("authorization", "Bearer $token")
                 .build()
-            val response = okHttpClient.newCall(request).await()
-            require(response.isSuccessful)
-            val body = Jsoup.parse(response.body?.string() ?: error("null body")).body()
-            val nickname =
-                body.getElementsByClass("views-field views-field-name").first()?.text() ?: error(
-                    "null nickname"
-                )
-            val numId = try {
-                body
-                    .select("div[class=menu-bar]")
-                    .select("ul[class=dropdown-menu]")[1]
-                    .select("li")
-                    .first()!!
-                    .select("a")
-                    .first()!!
-                    .attr("href")
-                    .let {
-                        it.split("/")[2].toInt()
-                    }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                
-                0
-            }
-            val profilePic = "https:" + body.getElementsByClass("views-field views-field-picture")
-                .first()
-                ?.child(0)
-                ?.child(0)
-                ?.attr("src")
-            val about = body.select("div[class=views-field views-field-field-about]")?.text()
-            val userId = body.select("div[id=block-mainblocks-user-connect]")
-                .select("ul[class=list-unstyled]").select("a").first()!!.attr("href").let {
-                    it.substring(it.indexOf("new?user=") + "new?user=".length)
-                }
-            val friendRequest = try {
-                body.select("div[id=user-links]")
-                    .first()
-                    ?.select("a")
-                    ?.get(2)
-                    ?.takeIf {
-                        it.attr("href").startsWith("/user/friends")
-                    }
-                    ?.text()
-                    ?.trim()
-                    ?.takeIf { it.isNotBlank() }
-                    ?.toInt() ?: 0
-            } catch (e: Exception) {
-                e.printStackTrace()
-                0
-            }
-            val messages = try {
-                body.select("div[id=user-links]")
-                    .first()
-                    ?.select("a")
-                    ?.get(1)
-                    ?.text()
-                    ?.trim()
-                    ?.takeIf { it.isNotBlank() }
-                    ?.toInt() ?: 0
-            } catch (e: Exception) {
-                e.printStackTrace()
-                0
-            }
+            val userResponse = okHttpClient.newCall(user).await()
+            require(userResponse.isSuccessful)
 
-            Log.i(
-                TAG,
-                "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic, friend=$friendRequest)"
-            )
+            val count = Request.Builder()
+                .url("https://api.iwara.tv/user/counts")
+                .get()
+                .addHeader("authorization", "Bearer $token")
+                .build()
+            val countResponse = okHttpClient.newCall(count).await()
+            require(countResponse.isSuccessful)
 
+            val userJson = JSONObject(userResponse.body.string())
+            val countJson = JSONObject(countResponse.body.string())
+            Log.i(TAG, "getSelf: $userJson")
+            Log.i(TAG, "countJson: $countJson")
+            val userInfo = JSONObject(userJson.get("user").toString())
+            val profile = JSONObject(userJson.get("profile").toString())
+            val id = userInfo.get("id").toString()
+            val name = userInfo.get("name").toString()
+            val profilePic = if (userInfo.get("avatar").toString().isNotBlank()) {
+                val id = JSONObject(userInfo.get("avatar").toString()).get("id").toString()
+                val name = JSONObject(userInfo.get("avatar").toString()).get("name").toString()
+                "https://i.iwara.tv/image/avatar/$id/$name"
+            } else {
+                "https://www.iwara.tv/images/default-avatar.jpg"
+            }
+            val about = if (profile.toString().isNotBlank()) {
+                profile.get("body").toString()
+            } else {
+                ""
+            }
+            val friendRequest = countJson.get("friendRequests").toString().toInt()
+            val messages = countJson.get("messages").toString().toInt()
+            val notifications = countJson.get("notifications").toString().toInt()
             Response.success(
                 Self(
-                    id = userId,
-                    numId = numId,
-                    nickname = nickname,
+                    id = id,
+                    name = name,
                     profilePic = profilePic,
                     about = about,
                     friendRequest = friendRequest,
-                    messages = messages
+                    messages = messages,
+                    notifications = notifications
                 )
             )
         } catch (exception: Exception) {
             exception.printStackTrace()
-            
             Response.failed(exception.javaClass.name)
         }
     }
@@ -499,7 +466,7 @@ class IwaraParser(
                 )
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                
+
                 Log.i(TAG, "getVideoPageDetail: Failed to load video detail")
                 Response.failed(exception.javaClass.name)
             }
@@ -527,7 +494,7 @@ class IwaraParser(
                 Response.success(likeResponse)
             } catch (e: Exception) {
                 e.printStackTrace()
-                
+
                 Response.failed(e.javaClass.name)
             }
         }
@@ -553,7 +520,7 @@ class IwaraParser(
             Response.success(followResponse)
         } catch (e: Exception) {
             e.printStackTrace()
-            
+
             Response.failed(e.javaClass.name)
         }
     }
@@ -933,7 +900,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            
+
             Response.failed(e.javaClass.simpleName)
         }
     }
@@ -1055,7 +1022,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            
+
             Response.failed(e.javaClass.simpleName)
         }
     }
@@ -1156,7 +1123,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            
+
             Response.failed(e.javaClass.name)
         }
     }
@@ -1218,7 +1185,7 @@ class IwaraParser(
             } catch (e: Exception) {
                 e.printStackTrace()
                 logError("Failed to get like list", e)
-                
+
                 Response.failed(e.javaClass.simpleName)
             }
         }
@@ -1255,8 +1222,24 @@ class IwaraParser(
                 Log.i(TAG, "postComment: 已提交评论请求！(${response.code}})")
             } catch (e: Exception) {
                 e.printStackTrace()
-                
+
             }
         }
+    }
+
+    private suspend fun getToken(
+        token: String
+    ): String {
+        if (token.isEmpty()) {
+            return ""
+        }
+        val tokenRequest = Request.Builder()
+            .url("https://api.iwara.tv/user/token")
+            .post(RequestBody.create("application/json; charset=utf-8".toMediaType(), ""))
+            .addHeader("authorization", "Bearer $token")
+            .build()
+        val loginResponse = okHttpClient.newCall(tokenRequest).await()
+        require(loginResponse.isSuccessful)
+        return JSONObject(loginResponse.body.string()).get("accessToken").toString()
     }
 }

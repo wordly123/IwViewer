@@ -34,7 +34,7 @@ class RouterViewModel @Inject constructor(
                 } else {
                     // 没有网络连接?
                     Self.GUEST.copy(
-                        nickname = "???"
+                        name = "???"
                     )
                 }
             }

@@ -6,5 +6,5 @@ data class Session(
 ) {
     fun isNotEmpty() = key.isNotEmpty()
 
-    fun getToken()  = "Bearer $key"
+    fun getToken()  = key
 }

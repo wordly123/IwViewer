@@ -233,7 +233,7 @@ private fun TopBar(
                 "lastPopup",
                 0L
             ) >= 1.days.inWholeMilliseconds
-            && (self.numId <= 190_0000 || !self.profilePic.contains("default-avatar.png"))
+            && !self.profilePic.contains("default-avatar.jpg")
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
         ) {
             setting.edit {
