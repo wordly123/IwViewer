@@ -69,12 +69,6 @@ private fun FollowingUserList(viewModel: FollowScreenViewModel, paddingValues: P
                 viewModel.delete(it)
             }
         }
-
-        item(
-            span = { GridItemSpan(2) }
-        ) {
-            Text("关注列表基于你的浏览历史分析得出, 从iwara无法获取该数据，清空APP数据会重置该列表")
-        }
     }
 }
 

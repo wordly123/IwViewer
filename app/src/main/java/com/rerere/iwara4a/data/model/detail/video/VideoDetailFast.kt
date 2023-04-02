@@ -28,5 +28,6 @@ fun VideoDetailFast.toMediaPreview() = MediaPreview(
     watchs = this.watchs,
     type = MediaType.VIDEO,
     mediaId = this.id,
-    private = false
+    private = false,
+    createdAt = this.postDate
 )

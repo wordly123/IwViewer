@@ -26,11 +26,10 @@ import com.rerere.iwara4a.util.logError
 import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.FormBody
+import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -146,48 +145,48 @@ class IwaraParser(
     suspend fun getSubscriptionList(session: Session, page: Int): Response<SubscriptionList> =
         withContext(Dispatchers.IO) {
             try {
-                session.getToken()
+                val token = getToken(session.getToken())
+                if (token.isEmpty()) {
+                    return@withContext Response.failed("获取token失败")
+                }
                 val request = Request.Builder()
-                    .url("https://ecchi.iwara.tv/subscriptions?page=$page")
+                    .url("https://api.iwara.tv/videos?page=${page}&limit=24&subscribed=true")
                     .get()
+                    .addHeader("authorization", "Bearer $token")
                     .build()
                 val response = okHttpClient.newCall(request).await()
                 require(response.isSuccessful)
-                val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
-                val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
-
-                val previewList: List<MediaPreview> = elements.map {
-                    val title = it.getElementsByClass("title").text()
-                    val author = it.getElementsByClass("username").text()
-                    val pic =
-                        "https:" + it.select("div[class=field-item even]")
-                            .select("img")
-                            .attr("src")
-                    val likes = it.getElementsByClass("right-icon").text()
-                    val watchs = it.getElementsByClass("left-icon").text()
-                    val link = it.select("div[class=field-item even]")
-                        .select("a")
-                        .first()
-                        ?.attr("href") ?: it.select("a").attr("href")
-                    val mediaId = link.substring(link.lastIndexOf("/") + 1)
-                    val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
-                    val private = it.select("div[class=private-video]").any()
-
-                    MediaPreview(
+                val body = JSONObject(response.body.string())
+                val list = body.get("results") as JSONArray
+                val previewList = ArrayList<MediaPreview>()
+                for (i in 0 until list.length()) {
+                    val item = list.get(i) as JSONObject
+                    val title = item.get("title").toString()
+                    val author = JSONObject(item.get("user").toString()).get("name").toString()
+                    val fileId = JSONObject(item.get("file").toString()).get("id").toString()
+                    val pic = "https://i.iwara.tv/image/thumbnail/${fileId}/thumbnail-00.jpg";
+                    val numLikes = item.get("numLikes").toString()
+                    val numViews = item.get("numViews").toString()
+                    val mediaId = item.get("id").toString()
+                    val private = item.get("private").toString().toBoolean()
+                    val createdAt = item.get("createdAt").toString().substring(0,10)
+                    val type = MediaType.VIDEO
+                    previewList.add(MediaPreview(
                         title = title,
                         author = author,
                         previewPic = pic,
-                        likes = likes,
-                        watchs = watchs,
+                        likes = numLikes,
+                        watchs = numViews,
                         mediaId = mediaId,
                         type = type,
-                        private = private
-                    )
+                        private = private,
+                        createdAt = createdAt
+                    ))
                 }
-
-                val hasNextPage =
-                    body.select("ul[class=pager]").select("li[class~=^pager-next .+\$]").any()
-
+                val count = body.get("count").toString().toInt()
+                val page = body.get("page").toString().toInt()
+                val limit = body.get("limit").toString().toInt()
+                val hasNextPage = (page +1)*limit < count
                 Response.success(
                     SubscriptionList(
                         page,
@@ -702,7 +701,8 @@ class IwaraParser(
                     watchs = watchs,
                     mediaId = mediaId,
                     type = type,
-                    private = private
+                    private = private,
+                    createdAt = ""
                 )
             }
 
@@ -882,7 +882,9 @@ class IwaraParser(
                     likes = likes,
                     watchs = watchs,
                     mediaId = mediaId,
-                    type = type
+                    type = type,
+                    private = false,
+                    createdAt = ""
                 )
             }
 
@@ -1107,7 +1109,9 @@ class IwaraParser(
                         likes = likes,
                         watchs = watchs,
                         type = type,
-                        mediaId = id
+                        mediaId = id,
+                        private = false,
+                        createdAt = ""
                     )
                 }
 
@@ -1164,7 +1168,9 @@ class IwaraParser(
                         likes = likes,
                         watchs = watchs,
                         mediaId = mediaId,
-                        type = type
+                        type = type,
+                        private = false,
+                        createdAt = ""
                     )
                 }
 

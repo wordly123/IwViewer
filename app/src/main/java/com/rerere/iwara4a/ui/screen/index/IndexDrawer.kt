@@ -1,8 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -11,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -22,8 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.component.ComposeWebview
-import com.rerere.iwara4a.util.openUrl
 import kotlinx.coroutines.launch
 
 @Composable
@@ -115,24 +110,6 @@ fun IndexDrawer(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            // 历史记录
-            NavigationDrawerItem(
-                selected = false,
-                icon = {
-                    Icon(Icons.Outlined.History, null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_history))
-                },
-                onClick = {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("history")
-                    }
-                },
-                badge = {}
-            )
-
             // 下载
             NavigationDrawerItem(
                 selected = false,

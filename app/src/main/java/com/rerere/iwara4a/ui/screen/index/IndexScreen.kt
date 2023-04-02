@@ -2,7 +2,6 @@ package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -11,14 +10,12 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.BuildConfig
@@ -31,7 +28,6 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RankPage
-import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.states.rememberPrimaryClipboardState
 import com.rerere.iwara4a.util.DataState
@@ -113,12 +109,9 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                     SubPage(indexViewModel)
                                 }
                                 1 -> {
-                                    RecommendPage(indexViewModel)
-                                }
-                                2 -> {
                                     RankPage(indexViewModel)
                                 }
-                                3 -> {
+                                2 -> {
                                     ExplorePage(indexViewModel)
                                 }
                             }
@@ -347,19 +340,6 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
-                Icon(imageVector = Icons.Outlined.Recommend, contentDescription = null)
-            },
-            label = {
-                Text(text = stringResource(R.string.screen_index_bottom_recommend))
-            },
-            alwaysShowLabel = false
-        )
-        NavigationBarItem(
-            selected = currentPage == 2,
-            onClick = {
-                scrollToPage(2)
-            },
-            icon = {
                 Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
@@ -369,9 +349,9 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
         )
 
         NavigationBarItem(
-            selected = currentPage == 3,
+            selected = currentPage == 2,
             onClick = {
-                scrollToPage(3)
+                scrollToPage(2)
             },
             icon = {
                 Icon(imageVector = Icons.Outlined.Explore, contentDescription = null)

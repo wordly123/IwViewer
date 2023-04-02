@@ -33,7 +33,9 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
                     likes = it.likes,
                     watchs = it.watchs,
                     type = MediaType.VIDEO,
-                    mediaId = it.id
+                    mediaId = it.id,
+                    private = false,
+                    createdAt = ""
                 )
             )
         }
